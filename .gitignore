@@ -8,5 +8,3 @@
 .idea/workspace.xml
 btl_bomberman.iml
 .idea/checkstyle-idea.xml
-main/graphic/Sprite.java
-main/graphic/SpriteSheet.java
