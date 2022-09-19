@@ -1,3 +1,5 @@
+package main;
+
 import java.util.*;
 import java.text.*;
 
@@ -28,7 +30,7 @@ public class Map {
       return "Wall";
     }
     if (map[x][y].equals("x")) {
-      return "Portal";
+      return "main.Portal";
     }
     if (map[x][y].equals("b")) {
       return "BombItem";

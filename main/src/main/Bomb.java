@@ -1,3 +1,5 @@
+package main;
+
 public class Bomb {
   int x;
   int y;
