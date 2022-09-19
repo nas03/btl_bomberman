@@ -27,7 +27,7 @@ public class Map {
       return "Grass";
     }
     if (map[x][y].equals("#")) {
-      return "Wall";
+      return "main.Wall";
     }
     if (map[x][y].equals("x")) {
       return "main.Portal";
