@@ -1,9 +1,14 @@
 package main;
 
 public class Game {
-    public void run() {}
-    public void update() {}
 
-    public void render() {}
+  public void run() {
+  }
+
+  public void update() {
+  }
+
+  public void render() {
+  }
 
 }
