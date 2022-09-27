@@ -1,11 +1,11 @@
-package main;
+package src.main;
 
 import java.util.*;
 import java.text.*;
 
 public class Map {
 
-  String[][] map = new String[13][31];
+  public String[][] map = new String[13][31];
 
   /**
    * 1: wall 0: grass 2: brick

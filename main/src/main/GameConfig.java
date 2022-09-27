@@ -1,5 +1,5 @@
-package main;
-import entity.Player;
+package src.main;
+import src.entity.*;
 
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicComboBoxUI;
