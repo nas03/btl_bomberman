@@ -55,6 +55,6 @@ public class Map {
   }
 
   void renderMap() {
-//Render image
+    //Load image
   }
 }

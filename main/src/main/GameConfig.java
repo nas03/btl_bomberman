@@ -1,20 +1,8 @@
-package src.main;
-import src.entity.*;
+package main;
+import Objects.TilesManage;
 
 import javax.swing.JPanel;
-import javax.swing.plaf.basic.BasicComboBoxUI;
-import javax.swing.plaf.basic.BasicTreeUI;
 import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.font.GlyphVector;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ImageObserver;
-import java.awt.image.RenderedImage;
-import java.awt.image.renderable.RenderableImage;
-import java.text.AttributedCharacterIterator;
-import java.util.Map;
 
 public class GameConfig extends JPanel  {
     //Thông số của màn hình
@@ -25,12 +13,13 @@ public class GameConfig extends JPanel  {
 
 
     public final int adjustedSize = originalSize * scale;
-    final int maxScrCol = 15; // 15 brick per Column
-    final int maxScrRow = 14; // 14 brick per row
-    final int SCREEN_WIDTH = adjustedSize * maxScrCol;// 630
-    final int SCREEN_HEIGHT = adjustedSize * maxScrRow;//
+    public final int maxScrCol = 15; // 15 brick per Column
+    public final int maxScrRow = 14; // 14 brick per row
+    public final int SCREEN_WIDTH = adjustedSize * maxScrCol;// 630
+    public final int SCREEN_HEIGHT = adjustedSize * maxScrRow;//
     KeyHandler keyH = new KeyHandler();
-    Player player = new Player(this,keyH);
+    Bomber player = new Bomber(this,keyH);
+    TilesManage tileM = new TilesManage(this);
 
 
     public GameConfig() {
@@ -45,13 +34,14 @@ public class GameConfig extends JPanel  {
     public void paintComponents(Graphics g){
         super.paintComponents(g);
         Graphics2D g2 = (Graphics2D)g;
-        Player.render(g2);
+        tileM.render(g2);
+        //Player.render(g2);
+
     }
 
-    public void update(){
-        Player.update();
+    //public void update(){
+        //Player.update();
     }
 
 
 
-}

@@ -1,5 +1,8 @@
 package src.main;
 
-public class Portal {
+public class Portal extends GameConfig {
+
 
 }
+
+
