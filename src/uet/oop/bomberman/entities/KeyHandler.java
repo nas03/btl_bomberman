@@ -12,6 +12,22 @@ public class KeyHandler implements KeyListener {
 
     }
 
+    public void getKeyEvent(KeyEvent e) {
+        int code = e.getKeyCode();
+        if(code == KeyEvent.VK_W) {
+            System.out.println("W is pressed") ;
+        }
+        else if(code == KeyEvent.VK_S) {
+            System.out.println("S is pressed") ;
+        }
+        else if(code == KeyEvent.VK_D) {
+            System.out.println("D is pressed");
+        }
+        else if(code == KeyEvent.VK_A) {
+            System.out.println("A is pressed");
+        }
+
+    }
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
