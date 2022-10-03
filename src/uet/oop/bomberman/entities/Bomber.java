@@ -11,20 +11,40 @@ import java.awt.event.KeyListener;
 import javax.swing.JTextField;
 import java.awt.Component.*;
 
+
 public class Bomber extends Entity {
-    protected int xPos = 0;
-    protected int yPos = 0;
-    KeyHandler keyH;
+
+
+    KeyHandler keyH = new KeyHandler();
+    char move;
     int speed = 16;
+
+    public int xPos = 1;
+    public int yPos = 1;
 
 
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
-
     }
+
 
     @Override
     public void update() {
-
+       // movePlayer();
     }
+
+    /*public void movePlayer() {
+        if (move == 'W') {
+            y += speed;
+        }
+        if (move == 'S') {
+            y -= speed;
+        }
+        if (move == 'A') {
+            x -= speed;
+        }
+        if (move == 'D') {
+            x += speed;
+        }
+    }*/
 }

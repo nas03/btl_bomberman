@@ -5,27 +5,31 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
     public boolean upPressed,downPressed,rightPressed,leftPressed;
-
+    KeyEvent e;
 
     @Override
     public void keyTyped(KeyEvent e) {
 
     }
 
-    public void getKeyEvent(KeyEvent e) {
-        int code = e.getKeyCode();
-        if(code == KeyEvent.VK_W) {
-            System.out.println("W is pressed") ;
+    public char getKeyEvent() {
+
+        if(upPressed) {
+            return 'W';
         }
-        else if(code == KeyEvent.VK_S) {
+        else if(downPressed) {
             System.out.println("S is pressed") ;
+            return 'S';
         }
-        else if(code == KeyEvent.VK_D) {
+        else if(rightPressed) {
             System.out.println("D is pressed");
+            return 'D';
         }
-        else if(code == KeyEvent.VK_A) {
+        else  {
             System.out.println("A is pressed");
+            return 'A';
         }
+
 
     }
     @Override
@@ -61,5 +65,9 @@ public class KeyHandler implements KeyListener {
         if(code == KeyEvent.VK_A){
             leftPressed = false;
         }
+    }
+    public static void main(String[] args) {
+        /*KeyEvent e = new KeyEvent();*/
+
     }
 }

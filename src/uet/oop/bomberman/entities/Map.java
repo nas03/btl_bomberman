@@ -58,7 +58,7 @@ public class Map {
     }
     map = temp;
   }
-  /*public static void main(String[] args){
+  public static void main(String[] args){
     Map map = new Map();
     for (int i = 0; i < 13; i++) {
       for (int j = 0; j < 31; j++) {
@@ -66,7 +66,7 @@ public class Map {
       }
       System.out.println("");
     }
-  }*/
+  }
   void renderMap() {
     //Load image
   }

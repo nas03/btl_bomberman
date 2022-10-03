@@ -6,6 +6,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 /*
@@ -17,6 +19,7 @@ import uet.oop.bomberman.entities.Wall;
 */
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +27,15 @@ public class BombermanGame extends Application {
 
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
-
+    public char[][] map = new char[13][31];
+    public int xPos = 1;
+    public int yPos = 1;
     private GraphicsContext gc;
     private Canvas canvas;
+    Entity bomberman;
     private List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
-    Map map = new Map();
+
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -40,14 +46,54 @@ public class BombermanGame extends Application {
         // Tao Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
-
+        bomberman = new Bomber(xPos,yPos, Sprite.player_right.getFxImage());
+        entities.add(bomberman);
         // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
 
         // Tao scene
         Scene scene = new Scene(root);
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
+            if(key.getCode()== KeyCode.W) {
+                System.out.println("You pressed W");
+                if (canMove(xPos,yPos-1)) {
+                    yPos -= 1;
+                    bomberman = new Bomber(xPos,yPos,Sprite.player_up.getFxImage());
+                    entities.clear();
+                    entities.add(bomberman);
+                }
 
+            }
+            if(key.getCode()== KeyCode.S) {
+                System.out.println("S");
+                if (canMove(xPos,yPos + 1)) {
+                    yPos += 1;
+                    bomberman = new Bomber(xPos,yPos,Sprite.player_down.getFxImage());
+                    entities.clear();
+                    entities.add(bomberman);
+                }
+            }
+            if (key.getCode() == KeyCode.D) {
+                System.out.println("D");
+
+                if (canMove(xPos + 1,yPos)) {
+                    xPos += 1;
+                    bomberman = new Bomber(xPos,yPos,Sprite.player_right.getFxImage());
+                    entities.clear();
+                    entities.add(bomberman);
+                }
+            }
+            if (key.getCode() == KeyCode.A) {
+                System.out.println("A");
+                if (canMove(xPos-1,yPos)) {
+                    xPos -= 1;
+                    bomberman = new Bomber(xPos,yPos,Sprite.player_left.getFxImage());
+                    entities.clear();
+                    entities.add(bomberman);
+                }
+            }
+        });
         // Them scene vao stage
         stage.setScene(scene);
         stage.show();
@@ -63,44 +109,42 @@ public class BombermanGame extends Application {
 
         createMap();
 
-        Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        entities.add(bomberman);
+
+
     }
 
     public void createMap() {
         int mapIndex = 0;
-        String MAP = "################################p     ** *  1 * 2 *  * * *   ## # # #*# # #*#*# # # #*#*#*# ##  x*     ***  *  1   * 2 * * ## # # # # #*# # #*#*# # # # #*##f         x **  *  *   1     ## # # # # # # # # #*# #*# # # ##*  *      *  *      *        ## # # # #*# # # #*#*# # # # # ##*    **  *       *           ## #*# # # # # # #*# # # # # # ##           *   *  *          ################################";
         char[][] map = new char[13][31];
-        char[] mapArray = MAP.toCharArray();
-            for (int i = 0; i < 13; i++) {
-                for (int j = 0; j < 31; j++) {
-                    Entity object;
-                    map[i][j] = mapArray[mapIndex++];
+        String MAP = "################################      ** *  1 * 2 *  * * *   ## # # #*# # #*#*# # # #*#*#*# ##  x*     ***  *  1   * 2 * * ## # # # # #*# # #*#*# # # # #*##f         x **  *  *   1     ## # # # # # # # # #*# #*# # # ##*  *      *  *      *        ## # # # #*# # # #*#*# # # # # ##*    **  *       *           ## #*# # # # # # #*# # # # # # ##           *   *  *          ################################";
 
-                    if (map[i][j]=='#') {
-                        object = new Wall(i,j,Sprite.wall.getFxImage());
-                    }
-                    else if (map[i][j]=='x') {
-                        object = new Portal(i,j,Sprite.portal.getFxImage());
-                    }
-                    /*if (map[i][j]=='b') {
-                        return "BombItem";
-                    }
-                    if (map[i][j]== 'f') {
-                        return "FlameItem";
-                    }
-                    if (map[i][j]== 's') {
-                        return "SpeedItem";
-                    }*/
-                    else if (map[i][j]== '*') {
-                        object = new Brick(i,j,Sprite.brick.getFxImage());
-                    }
-                    else {
-                        object = new Grass(i,j,Sprite.grass.getFxImage());
-                    }
-                    stillObjects.add(object);
-                }
+        char[] mapArray = MAP.toCharArray();
+        for (int i = 0; i < 13; i++) {
+            for (int j = 0; j < 31; j++) {
+                map[i][j] = mapArray[mapIndex++];
             }
+        }
+
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                Entity object;
+                if (map[i][j] =='#') {
+                    object = new Wall(i,j,Sprite.wall.getFxImage());
+                }
+                else if (map[i][j]=='x') {
+                    object = new Portal(i,j,Sprite.portal.getFxImage());
+                }
+
+                else if (map[i][j] == '*') {
+                    object = new Brick(i,j,Sprite.brick.getFxImage());
+                }
+
+                else {
+                    object = new Grass(i,j,Sprite.grass.getFxImage());
+                }
+                stillObjects.add(object);
+            }
+        }
     }
 
     public void update() {
@@ -109,7 +153,19 @@ public class BombermanGame extends Application {
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        stillObjects.forEach(g -> g.render(gc));
+        for (int i = 0; i < stillObjects.size(); i++) {
+            stillObjects.get(i).render(gc);
+        }
         entities.forEach(g -> g.render(gc));
+    }
+
+    public boolean canMove(int x, int y) {
+        if (map[x][y] == '#' || map[x][y] == '*') {
+            return false;
+        }
+        if (x-1 < 0 || x + 1 > WIDTH || y -1 < 0 || y + 1 > HEIGHT) {
+            return false;
+        }
+        return true;
     }
 }
