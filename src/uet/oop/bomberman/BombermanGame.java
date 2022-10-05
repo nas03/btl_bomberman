@@ -10,13 +10,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
-/*
-import uet.oop.bomberman.entities.Brick;
-import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.Grass;
-import uet.oop.bomberman.entities.Map;
-import uet.oop.bomberman.entities.Wall;
-*/
+
+import uet.oop.bomberman.entities.enemy.*;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.security.Key;
@@ -32,9 +27,12 @@ public class BombermanGame extends Application {
     private GraphicsContext gc;
     private Canvas canvas;
     Entity bomberman;
-    private List<Entity> entities = new ArrayList<>();
+    private List<Entity> bomberMovement = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
 
+    private List<Entity> BalloonMovement = new ArrayList<>();
+    
+    
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -45,21 +43,26 @@ public class BombermanGame extends Application {
         // Tao Canvas
         canvas = new Canvas(992, 416);
         gc = canvas.getGraphicsContext2D();
+        //Bomberman
         bomberman = new Bomber(xPos,yPos, Sprite.player_right.getFxImage());
-        entities.add(bomberman);
+        bomberMovement.add(bomberman);
+
+        //Balloon
+        Entity balloon = new Balloon(2,1,Sprite.balloom_left1.getFxImage());
+        bomberMovement.add(balloon);
         // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
 
         // Tao scene
         Scene scene = new Scene(root);
+
+        //Bomber movement
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if(key.getCode()== KeyCode.W) {
                 if (canMove(xPos,yPos-1)) {
                     yPos -= 1;
                     bomberman = new Bomber(xPos,yPos,Sprite.player_up.getFxImage());
-                    entities.clear();
-                    entities.add(bomberman);
                 }
 
             }
@@ -68,8 +71,6 @@ public class BombermanGame extends Application {
                 if (canMove(xPos,yPos + 1)) {
                     yPos += 1;
                     bomberman = new Bomber(xPos,yPos,Sprite.player_down.getFxImage());
-                    entities.clear();
-                    entities.add(bomberman);
                 }
             }
             if (key.getCode() == KeyCode.D) {
@@ -77,19 +78,19 @@ public class BombermanGame extends Application {
                 if (canMove(xPos + 1,yPos) ) {
                     xPos += 1;
                     bomberman = new Bomber(xPos,yPos,Sprite.player_right.getFxImage());
-                    entities.clear();
-                    entities.add(bomberman);
                 }
             }
             if (key.getCode() == KeyCode.A) {
                 if (canMove(xPos-1,yPos)) {
                     xPos -= 1;
                     bomberman = new Bomber(xPos,yPos,Sprite.player_left.getFxImage());
-                    entities.clear();
-                    entities.add(bomberman);
                 }
             }
+            bomberMovement.clear();
+            bomberMovement.add(bomberman);
         });
+
+
         // Them scene vao stage
         stage.setScene(scene);
         stage.show();
@@ -103,14 +104,15 @@ public class BombermanGame extends Application {
         };
         timer.start();
 
+
+
         createMap();
-
-
 
     }
 
     public void createMap() {
         Map mapArray = new Map();
+
         char[][] map = mapArray.getMap();
 
         for (int i = 0; i < HEIGHT; i++) {
@@ -136,7 +138,8 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
-        entities.forEach(Entity::update);
+        bomberMovement.forEach(Entity::update);
+
     }
 
     public void render() {
@@ -144,7 +147,7 @@ public class BombermanGame extends Application {
         for (int i = 0; i < stillObjects.size(); i++) {
             stillObjects.get(i).render(gc);
         }
-        entities.forEach(g -> g.render(gc));
+        bomberMovement.forEach(g -> g.render(gc));
     }
 
     public boolean canMove(int x, int y) {
