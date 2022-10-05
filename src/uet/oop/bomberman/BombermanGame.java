@@ -27,7 +27,6 @@ public class BombermanGame extends Application {
 
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
-    public char[][] map = new char[13][31];
     public int xPos = 1;
     public int yPos = 1;
     private GraphicsContext gc;
@@ -44,7 +43,7 @@ public class BombermanGame extends Application {
     @Override
     public void start(Stage stage) {
         // Tao Canvas
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        canvas = new Canvas(992, 416);
         gc = canvas.getGraphicsContext2D();
         bomberman = new Bomber(xPos,yPos, Sprite.player_right.getFxImage());
         entities.add(bomberman);
@@ -56,7 +55,6 @@ public class BombermanGame extends Application {
         Scene scene = new Scene(root);
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if(key.getCode()== KeyCode.W) {
-                System.out.println("You pressed W");
                 if (canMove(xPos,yPos-1)) {
                     yPos -= 1;
                     bomberman = new Bomber(xPos,yPos,Sprite.player_up.getFxImage());
@@ -66,7 +64,7 @@ public class BombermanGame extends Application {
 
             }
             if(key.getCode()== KeyCode.S) {
-                System.out.println("S");
+
                 if (canMove(xPos,yPos + 1)) {
                     yPos += 1;
                     bomberman = new Bomber(xPos,yPos,Sprite.player_down.getFxImage());
@@ -75,9 +73,8 @@ public class BombermanGame extends Application {
                 }
             }
             if (key.getCode() == KeyCode.D) {
-                System.out.println("D");
 
-                if (canMove(xPos + 1,yPos)) {
+                if (canMove(xPos + 1,yPos) ) {
                     xPos += 1;
                     bomberman = new Bomber(xPos,yPos,Sprite.player_right.getFxImage());
                     entities.clear();
@@ -85,7 +82,6 @@ public class BombermanGame extends Application {
                 }
             }
             if (key.getCode() == KeyCode.A) {
-                System.out.println("A");
                 if (canMove(xPos-1,yPos)) {
                     xPos -= 1;
                     bomberman = new Bomber(xPos,yPos,Sprite.player_left.getFxImage());
@@ -114,33 +110,25 @@ public class BombermanGame extends Application {
     }
 
     public void createMap() {
-        int mapIndex = 0;
-        char[][] map = new char[13][31];
-        String MAP = "################################      ** *  1 * 2 *  * * *   ## # # #*# # #*#*# # # #*#*#*# ##  x*     ***  *  1   * 2 * * ## # # # # #*# # #*#*# # # # #*##f         x **  *  *   1     ## # # # # # # # # #*# #*# # # ##*  *      *  *      *        ## # # # #*# # # #*#*# # # # # ##*    **  *       *           ## #*# # # # # # #*# # # # # # ##           *   *  *          ################################";
-
-        char[] mapArray = MAP.toCharArray();
-        for (int i = 0; i < 13; i++) {
-            for (int j = 0; j < 31; j++) {
-                map[i][j] = mapArray[mapIndex++];
-            }
-        }
+        Map mapArray = new Map();
+        char[][] map = mapArray.getMap();
 
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 Entity object;
                 if (map[i][j] =='#') {
-                    object = new Wall(i,j,Sprite.wall.getFxImage());
+                    object = new Wall(j,i,Sprite.wall.getFxImage());
                 }
                 else if (map[i][j]=='x') {
-                    object = new Portal(i,j,Sprite.portal.getFxImage());
+                    object = new Portal(j,i,Sprite.portal.getFxImage());
                 }
 
                 else if (map[i][j] == '*') {
-                    object = new Brick(i,j,Sprite.brick.getFxImage());
+                    object = new Brick(j,i,Sprite.brick.getFxImage());
                 }
 
                 else {
-                    object = new Grass(i,j,Sprite.grass.getFxImage());
+                    object = new Grass(j,i,Sprite.grass.getFxImage());
                 }
                 stillObjects.add(object);
             }
@@ -152,7 +140,7 @@ public class BombermanGame extends Application {
     }
 
     public void render() {
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        //gc.clearRect(0, 0, 992, 416);
         for (int i = 0; i < stillObjects.size(); i++) {
             stillObjects.get(i).render(gc);
         }
@@ -160,7 +148,9 @@ public class BombermanGame extends Application {
     }
 
     public boolean canMove(int x, int y) {
-        if (map[x][y] == '#' || map[x][y] == '*') {
+        Map mapArray = new Map();
+        char[][] map = mapArray.getMap();
+        if (map[y][x] == '#' || map[y][x] == '*') {
             return false;
         }
         if (x-1 < 0 || x + 1 > WIDTH || y -1 < 0 || y + 1 > HEIGHT) {
