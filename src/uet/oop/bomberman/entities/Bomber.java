@@ -15,23 +15,12 @@ import java.awt.Component.*;
 public class Bomber extends Entity {
 
 
-    KeyHandler keyH = new KeyHandler();
-    char move;
-    int speed = 16;
-
-    public int xPos = 1;
-    public int yPos = 1;
-
-
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
     }
 
 
-    @Override
-    public void update() {
-       // movePlayer();
-    }
+
 
     /*public void movePlayer() {
         if (move == 'W') {

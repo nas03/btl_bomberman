@@ -8,8 +8,4 @@ public class Portal extends Entity {
     super(x, y, img);
   }
 
-  @Override
-  public void update() {
-
-  }
 }

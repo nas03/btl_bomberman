@@ -8,8 +8,5 @@ public class Brick extends Entity {
     super(x, y, img);
   }
 
-  @Override
-  public void update() {
 
-  }
 }
