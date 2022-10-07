@@ -32,12 +32,13 @@ public class BombermanGame extends Application {
     public List<Enemy> balloon = new ArrayList<>();
     Bomber bomberman;
     int currentBomb = 0;
+    int bombLimit = 1;
 
     Entity bomb = null;
     Map mapArray = new Map();
     public char[][] map = mapArray.getMap();
     public int getEntityPosInArray(int x,int y) {
-        return (y *31 + x);
+        return y*31 + x;
     }
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -51,6 +52,8 @@ public class BombermanGame extends Application {
         //Init
         bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         balloon.add(new Balloon(13, 1, Sprite.balloom_left1.getFxImage()));
+        balloon.add(new Balloon(18, 3, Sprite.balloom_left1.getFxImage()));
+        balloon.add(new Balloon(24, 5, Sprite.balloom_left1.getFxImage()));
 
         // Tao root container
         Group root = new Group();
@@ -62,32 +65,46 @@ public class BombermanGame extends Application {
         //Bomber movement
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if (key.getCode() == KeyCode.W) {
-                if (bomberman.canMove(bomberman.xPos, bomberman.yPos - 1, map)) {
-                    bomberman.yPos -= 1;
+                if (bomberman.canMove(stillObjects,bomberman.xPos, bomberman.yPos - bomberman.getSpeed())) {
+                    bomberman.yPos -= bomberman.getSpeed();
+                    bomberman.up();
+                }
+                else if (bomberman.canMove(stillObjects,bomberman.xPos, bomberman.yPos - bomberman.getSpeed()+1)) {
+                    bomberman.yPos -= bomberman.getSpeed() - 1;
                     bomberman.up();
                 }
 
             }
             if (key.getCode() == KeyCode.S) {
-                if (bomberman.canMove(bomberman.xPos, bomberman.yPos + 1, map)) {
-                    bomberman.yPos += 1;
+                if (bomberman.canMove(stillObjects,bomberman.xPos, bomberman.yPos + bomberman.getSpeed())) {
+                    bomberman.yPos += bomberman.getSpeed();
+                    bomberman.down();
+                }
+                else if (bomberman.canMove(stillObjects,bomberman.xPos, bomberman.yPos + bomberman.getSpeed() - 1)) {
+                    bomberman.yPos += bomberman.getSpeed() - 1;
                     bomberman.down();
                 }
             }
             if (key.getCode() == KeyCode.D) {
-                if (bomberman.canMove(bomberman.xPos + 1, bomberman.yPos, map)) {
-                    bomberman.xPos += 1;
+                if (bomberman.canMove(stillObjects,bomberman.xPos + bomberman.getSpeed(), bomberman.yPos)) {
+                    bomberman.xPos += bomberman.getSpeed();
+                    bomberman.right();
+                } else if (bomberman.canMove(stillObjects,bomberman.xPos + bomberman.getSpeed() - 1, bomberman.yPos)) {
+                    bomberman.xPos += bomberman.getSpeed() - 1;
                     bomberman.right();
                 }
             }
             if (key.getCode() == KeyCode.A) {
-                if (bomberman.canMove(bomberman.xPos - 1, bomberman.yPos, map)) {
-                    bomberman.xPos -= 1;
+                if (bomberman.canMove(stillObjects,bomberman.xPos - bomberman.getSpeed(), bomberman.yPos)) {
+                    bomberman.xPos -= bomberman.getSpeed();
+                    bomberman.left();
+                } else if (bomberman.canMove(stillObjects,bomberman.xPos - bomberman.getSpeed() + 1, bomberman.yPos)) {
+                    bomberman.xPos -= bomberman.getSpeed() - 1;
                     bomberman.left();
                 }
             }
             if (key.getCode() == KeyCode.ENTER) {
-                if (currentBomb == 0) {
+                if (currentBomb < bombLimit) {
                     bombX = bomberman.xPos;
                     bombY = bomberman.yPos;
                     bomb = new Bomb(bombX, bombY, Sprite.bomb.getFxImage());
@@ -96,6 +113,7 @@ public class BombermanGame extends Application {
                 }
             }
             checkInPortal();
+            checkInItem();
         });
 
         // Them scene vao stage
@@ -122,10 +140,14 @@ public class BombermanGame extends Application {
                 if (map[i][j] == '#') {
                     object = new Wall(j, i, Sprite.wall.getFxImage());
                 } else if (map[i][j] == 'x') {
-                    object = new Portal(j, i, Sprite.portal.getFxImage());
+                    object = new Brick(j, i, Sprite.brick.getFxImage());
                 } else if (map[i][j] == '*') {
                     object = new Brick(j, i, Sprite.brick.getFxImage());
-                } else {
+                } else if (map[i][j] == 'f') {
+                    object = new Brick(j, i, Sprite.brick.getFxImage());
+                } else if(map[i][j] == 's') {
+                    object = new Brick(j, i, Sprite.brick.getFxImage());
+                }else {
                     object = new Grass(j, i, Sprite.grass.getFxImage());
                 }
                 stillObjects.add(object);
@@ -134,22 +156,33 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
-
+        if(bomberman.isSpeedUp()) {
+            bomberman.speedUp();
+        }
         for (Enemy enemy : balloon) {
             if (enemy.getAlive()) {
-                enemy.enemyMovement(map);
+                enemy.enemyMovement(stillObjects);
             }
         }
         //explosion handle
         if (bomb != null) {
+
             if (((Bomb) bomb).getExplode()) {
                 for (Enemy enemy : balloon) {
-                    if (((Bomb) bomb).bombTouched(enemy.xPos, enemy.yPos)) {
+                    if(bomberman.getEnhancedFlame()) {
+                        if (((Bomb) bomb).enhancedBombTouched(enemy.xPos, enemy.yPos)) {
+                            enemy.setAlive(false);
+                        }
+                    }
+                    else if (((Bomb) bomb).bombTouched(enemy.xPos, enemy.yPos)) {
                         enemy.setAlive(false);
                     }
                 }
-
-                if (((Bomb) bomb).bombTouched(bomberman.xPos, bomberman.yPos)) {
+                if(bomberman.getEnhancedFlame()) {
+                    if (((Bomb) bomb).enhancedBombTouched(bomberman.xPos, bomberman.yPos)) {
+                        bomberman.setAlive(false);
+                    }
+                }else if (((Bomb) bomb).bombTouched(bomberman.xPos, bomberman.yPos)) {
                     bomberman.setAlive(false);
                 }
             }
@@ -167,7 +200,12 @@ public class BombermanGame extends Application {
         }
         if (bomb != null) {
             if (((Bomb) bomb).isStartExplode()) {
-                ((Bomb) bomb).bombExplosion(gc, map, stillObjects);
+                if(bomberman.getEnhancedFlame()) {
+                    ((Bomb) bomb).enhancedBombExplosion(gc, map, stillObjects);
+                }
+                else {
+                    ((Bomb) bomb).bombExplosion(gc, map, stillObjects);
+                }
             } else {
                 bomb = null;
                 currentBomb--;
@@ -178,15 +216,43 @@ public class BombermanGame extends Application {
         }
     }
     public void checkInPortal() {
-        if(stillObjects.get(getEntityPosInArray(bomberman.xPos,bomberman.yPos)) instanceof Portal) {
-            System.out.println("in Portal");
-            int currentLocX = bomberman.xPos;
-            int currentLocY = bomberman.yPos;
-            int findPortalX = ((Portal)stillObjects.get(getEntityPosInArray(currentLocX,currentLocY))).stepOutX(map,currentLocX,currentLocY);
-            int findPortalY = ((Portal)stillObjects.get(getEntityPosInArray(currentLocX,currentLocY))).stepOutY(map,currentLocX,currentLocY);
-            bomberman.xPos = findPortalX;
-            bomberman.yPos = findPortalY;
+
+    }
+    public void checkInItem(){
+        int currentLocX = bomberman.xPos;
+        int currentLocY = bomberman.yPos;
+        if(stillObjects.get(getEntityPosInArray(currentLocX,currentLocY)) instanceof FlameItem) {
+            System.out.println("In FlameItem");
+            bomberman.setEnhancedFlame(true);
+            stillObjects.remove(getEntityPosInArray(currentLocX,currentLocY));
+            stillObjects.add(getEntityPosInArray(currentLocX,currentLocY), new Grass(currentLocX,currentLocY,Sprite.grass.getFxImage()));
+
         }
+        else if(stillObjects.get(getEntityPosInArray(currentLocX,currentLocY)) instanceof BombItem) {
+            System.out.println("In BombItem");
+            bombLimit++;
+            stillObjects.remove(getEntityPosInArray(currentLocX,currentLocY));
+            stillObjects.add(getEntityPosInArray(currentLocX,currentLocY), new Grass(currentLocX,currentLocY,Sprite.grass.getFxImage()));
+        }
+        else if(stillObjects.get(getEntityPosInArray(currentLocX,currentLocY)) instanceof SpeedItem) {
+            System.out.println("In SpeedItem");
+            bomberman.setSpeedUp(true);
+            stillObjects.remove(getEntityPosInArray(currentLocX,currentLocY));
+            stillObjects.add(getEntityPosInArray(currentLocX,currentLocY), new Grass(currentLocX,currentLocY,Sprite.grass.getFxImage()));
+        }else if(stillObjects.get(getEntityPosInArray(currentLocX,currentLocY)) instanceof Portal) {
+            System.out.println("in Portal");
+            boolean flag = true;
+            for(Enemy balloon: balloon) {
+                if(balloon.getAlive()) {
+                    flag = false;
+                }
+            }
+            if(flag) {
+                System.out.printf("Next Level");
+            }
+
+        }
+
     }
 
 }

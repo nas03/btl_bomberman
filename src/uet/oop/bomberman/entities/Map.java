@@ -27,8 +27,4 @@ public class Map {
     return map;
   }
 
-
-  void renderMap() {
-    //Load image
-  }
 }

@@ -4,10 +4,12 @@ import javafx.scene.canvas.GraphicsContext;
 import uet.oop.bomberman.entities.Entity;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Map;
-import uet.oop.bomberman.entities.MovingEntity;
+import uet.oop.bomberman.entities.movingEntity.MovingEntity;
 import uet.oop.bomberman.graphics.Sprite;
+import java.util.ArrayList;
 
 import java.awt.*;
+import java.util.List;
 
 public abstract class Enemy extends MovingEntity {
     public int frame = 0;
@@ -29,10 +31,10 @@ public abstract class Enemy extends MovingEntity {
     @Override
     public abstract void render(GraphicsContext gc);
 
-    public abstract void enemyMovement(char[][] map);
+    public abstract void enemyMovement(List <Entity> stillObjects);
 
     public void resetFrame() {
-        if (frame == 501) {
+        if (frame == 500) {
             frame = 0;
         }
     }

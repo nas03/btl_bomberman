@@ -26,7 +26,6 @@ public abstract class Entity {
         this.y = yUnit * Sprite.SCALED_SIZE;
         this.img = img;
     }
-
     public void render(GraphicsContext gc) {
         gc.drawImage(img,x, y);
     }

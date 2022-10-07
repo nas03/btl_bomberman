@@ -7,8 +7,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import uet.oop.bomberman.entities.MovingEntity;
+
 import uet.oop.bomberman.graphics.Sprite;
+import java.util.ArrayList;
+
 
 import java.awt.event.KeyListener;
 import javax.swing.JTextField;
@@ -17,6 +19,24 @@ import java.awt.Component.*;
 
 public class Bomber extends MovingEntity {
 
+    private boolean enhancedFlame = false;
+    private boolean speedUp = false;
+    private int speedUpTime = 0;
+
+    public boolean isSpeedUp() {
+        return speedUp;
+    }
+
+    public void setSpeedUp(boolean speedUp) {
+        this.speedUp = speedUp;
+    }
+
+    public void setEnhancedFlame(boolean enhancedFlame) {
+        this.enhancedFlame = enhancedFlame;
+    }
+    public boolean getEnhancedFlame() {
+        return enhancedFlame;
+    }
     public void setAlive(boolean alive) {
         isAlive = alive;
     }
@@ -25,6 +45,17 @@ public class Bomber extends MovingEntity {
     }
     public Bomber(int x, int y, Image img) {
         super(x,y,img);
+    }
+
+    public void speedUp() {
+        speedUpTime++;
+        if(speedUpTime < 100) {
+            setSpeed(2);
+        }else {
+            speedUpTime = 0;
+            setSpeed(1);
+            speedUp = false;
+        }
     }
 
     @Override
