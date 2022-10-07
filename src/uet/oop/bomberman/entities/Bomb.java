@@ -4,7 +4,6 @@ import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Bomb extends Entity {
@@ -70,9 +69,9 @@ public class Bomb extends Entity {
         } else if (bombFrame < 150) {
             explode = true;
             gc.drawImage(Sprite.bomb_exploded.getFxImage(), x, y);
-        } else if (bombFrame < 200) {
+        } else if (bombFrame < 155) {
             gc.drawImage(Sprite.bomb_exploded1.getFxImage(), x, y);
-        } else if (bombFrame < 250) {
+        } else if (bombFrame < 160) {
             explode1 = true;
             gc.drawImage(Sprite.bomb_exploded2.getFxImage(), x, y);
             //get object affected by flame
@@ -143,7 +142,7 @@ public class Bomb extends Entity {
                     map[y / Sprite.SCALED_SIZE + 1][x / Sprite.SCALED_SIZE] = ' ';
                 }
             }
-        } else if (bombFrame > 250) {
+        } else if (bombFrame > 160) {
             resetBomb();
             flag = false;
         }
@@ -190,18 +189,80 @@ public class Bomb extends Entity {
                 gc.drawImage(Sprite.explosion_vertical2.getFxImage(), x, (y - 32));
             }
             //enhanced render
-            if (!(stillObjects.get(destroyBrick_down1) instanceof Wall)) {
-                gc.drawImage(Sprite.explosion_vertical_down_last2.getFxImage(), x, (y + 64));
+            try {
+                if ((!(stillObjects.get(destroyBrick_down1) instanceof Wall)) && (y / Sprite.SCALED_SIZE) + 2 <= HEIGHT && (!(stillObjects.get(destroyBrick_down) instanceof Wall))) {
+                    gc.drawImage(Sprite.explosion_vertical_down_last2.getFxImage(), x, (y + 64));
+                }
+                if (stillObjects.get(destroyBrick_down1) instanceof Brick && y / Sprite.SCALED_SIZE + 2 <= HEIGHT && (!(stillObjects.get(destroyBrick_down) instanceof Wall))) {
+                    stillObjects.remove(destroyBrick_down1);
+                    if (map[y / Sprite.SCALED_SIZE + 2][x / Sprite.SCALED_SIZE] == 'f') {
+                        stillObjects.add(destroyBrick_down1, new FlameItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 2, Sprite.powerup_flames.getFxImage()));
+                    } else if (map[y / Sprite.SCALED_SIZE + 2][x / Sprite.SCALED_SIZE] == 'x') {
+                        stillObjects.add(destroyBrick_down1, new Portal(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 2, Sprite.portal.getFxImage()));
+                    } else {
+                        stillObjects.add(destroyBrick_down1, new Grass(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 2, Sprite.grass.getFxImage()));
+                        map[y / Sprite.SCALED_SIZE + 2][x / Sprite.SCALED_SIZE] = ' ';
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("map out of bound");
             }
 
-            if (!(stillObjects.get(destroyBrick_left1) instanceof Wall)) {
-                gc.drawImage(Sprite.explosion_horizontal_left_last2.getFxImage(), (x - Sprite.SCALED_SIZE*2), y);
+            try {
+                if (!(stillObjects.get(destroyBrick_left1) instanceof Wall) && x / Sprite.SCALED_SIZE - 2 >= 0 && !(stillObjects.get(destroyBrick_left) instanceof Wall)) {
+                    gc.drawImage(Sprite.explosion_horizontal_left_last2.getFxImage(), (x - Sprite.SCALED_SIZE * 2), y);
+                }
+                if (stillObjects.get(destroyBrick_left1) instanceof Brick && x / Sprite.SCALED_SIZE - 2 >= 0 && !(stillObjects.get(destroyBrick_left) instanceof Wall)) {
+                    stillObjects.remove(destroyBrick_left1);
+                    if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] == 'f') {
+                        stillObjects.add(destroyBrick_left1, new FlameItem(x / Sprite.SCALED_SIZE - 2, y / Sprite.SCALED_SIZE, Sprite.powerup_flames.getFxImage()));
+                    } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] == 'x') {
+                        stillObjects.add(destroyBrick_left1, new Portal(x / Sprite.SCALED_SIZE - 2, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                    } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] == '*') {
+                        stillObjects.add(destroyBrick_left1, new Grass(x / Sprite.SCALED_SIZE - 2, y / Sprite.SCALED_SIZE, Sprite.grass.getFxImage()));
+                        map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] = ' ';
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println(" map left1 out of bound");
             }
-            if (!(stillObjects.get(destroyBrick_right1) instanceof Wall)) {
-                gc.drawImage(Sprite.explosion_horizontal_right_last2.getFxImage(), x + Sprite.SCALED_SIZE*2, y);
+
+            try {
+                if (!(stillObjects.get(destroyBrick_right1) instanceof Wall) && x / Sprite.SCALED_SIZE + 2 <= WIDTH && !(stillObjects.get(destroyBrick_right) instanceof Wall)) {
+                    gc.drawImage(Sprite.explosion_horizontal_right_last2.getFxImage(), x + Sprite.SCALED_SIZE * 2, y);
+                }
+                if (stillObjects.get(destroyBrick_right1) instanceof Brick && x / Sprite.SCALED_SIZE + 2 <= WIDTH && !(stillObjects.get(destroyBrick_right) instanceof Wall)) {
+                    stillObjects.remove(destroyBrick_right1);
+                    if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 2] == 'f') {
+                        stillObjects.add(destroyBrick_right1, new FlameItem(x / Sprite.SCALED_SIZE + 2, y / Sprite.SCALED_SIZE, Sprite.powerup_flames.getFxImage()));
+                    } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 2] == 'x') {
+                        stillObjects.add(destroyBrick_right1, new Portal(x / Sprite.SCALED_SIZE + 2, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                    } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 2] == '*') {
+                        stillObjects.add(destroyBrick_right1, new Grass(x / Sprite.SCALED_SIZE + 2, y / Sprite.SCALED_SIZE, Sprite.grass.getFxImage()));
+                        map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 2] = ' ';
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Map out of bound righ1");
             }
-            if (!(stillObjects.get(destroyBrick_up) instanceof Wall)) {
-                gc.drawImage(Sprite.explosion_vertical_top_last2.getFxImage(), x, (y - Sprite.SCALED_SIZE*2));
+
+            try {
+                if (!(stillObjects.get(destroyBrick_up1) instanceof Wall) && x / Sprite.SCALED_SIZE - 2 >= 0 && !(stillObjects.get(destroyBrick_up) instanceof Wall)) {
+                    gc.drawImage(Sprite.explosion_vertical_top_last2.getFxImage(), x, (y - Sprite.SCALED_SIZE * 2));
+                }
+                if (stillObjects.get(destroyBrick_up1) instanceof Brick && y / Sprite.SCALED_SIZE - 2 > 0 && !(stillObjects.get(destroyBrick_up1) instanceof Wall)) {
+                    stillObjects.remove(destroyBrick_up1);
+                    if (map[y / Sprite.SCALED_SIZE - 2][x / Sprite.SCALED_SIZE] == 'f') {
+                        stillObjects.add(destroyBrick_up1, new FlameItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 2, Sprite.powerup_flames.getFxImage()));
+                    } else if (map[y / Sprite.SCALED_SIZE - 2][x / Sprite.SCALED_SIZE] == 'x') {
+                        stillObjects.add(destroyBrick_up1, new Portal(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 2, Sprite.portal.getFxImage()));
+                    } else {
+                        stillObjects.add(destroyBrick_up1, new Grass(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 2, Sprite.grass.getFxImage()));
+                        map[y / Sprite.SCALED_SIZE - 2][x / Sprite.SCALED_SIZE] = ' ';
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Map out of bound up1");
             }
 
             //handle object affected by flame
@@ -216,7 +277,6 @@ public class Bomb extends Entity {
                     map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] = ' ';
                 }
             }
-
 
             if (stillObjects.get(destroyBrick_right) instanceof Brick) {
                 stillObjects.remove(destroyBrick_right);
@@ -254,54 +314,14 @@ public class Bomb extends Entity {
                 }
             }
             //enhanceExplosion
-            if (stillObjects.get(destroyBrick_left1) instanceof Brick) {
-                stillObjects.remove(destroyBrick_left1);
-                if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] == 'f') {
-                    stillObjects.add(destroyBrick_left1, new FlameItem(x / Sprite.SCALED_SIZE - 2, y / Sprite.SCALED_SIZE, Sprite.powerup_flames.getFxImage()));
-                } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] == 'x') {
-                    stillObjects.add(destroyBrick_left1, new Portal(x / Sprite.SCALED_SIZE - 2, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
-                } else if(map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] == '*'){
-                    stillObjects.add(destroyBrick_left1, new Grass(x / Sprite.SCALED_SIZE - 2, y / Sprite.SCALED_SIZE, Sprite.grass.getFxImage()));
-                    map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] = ' ';
-                }
-            }
 
 
-            if (stillObjects.get(destroyBrick_right1) instanceof Brick) {
-                stillObjects.remove(destroyBrick_right1);
-                if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +2] == 'f') {
-                    stillObjects.add(destroyBrick_right1, new FlameItem(x / Sprite.SCALED_SIZE + 2, y / Sprite.SCALED_SIZE, Sprite.powerup_flames.getFxImage()));
-                } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +2] == 'x') {
-                    stillObjects.add(destroyBrick_right1, new Portal(x / Sprite.SCALED_SIZE + 2, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
-                } else if(map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +2] == '*'){
-                    stillObjects.add(destroyBrick_right1, new Grass(x / Sprite.SCALED_SIZE + 2, y / Sprite.SCALED_SIZE, Sprite.grass.getFxImage()));
-                    map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +2] = ' ';
-                }
-            }
 
-            if (stillObjects.get(destroyBrick_up1) instanceof Brick) {
-                stillObjects.remove(destroyBrick_up1);
-                if (map[y / Sprite.SCALED_SIZE - 2][x / Sprite.SCALED_SIZE] == 'f') {
-                    stillObjects.add(destroyBrick_up1, new FlameItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 2, Sprite.powerup_flames.getFxImage()));
-                } else if (map[y / Sprite.SCALED_SIZE - 2][x / Sprite.SCALED_SIZE] == 'x') {
-                    stillObjects.add(destroyBrick_up1, new Portal(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 2, Sprite.portal.getFxImage()));
-                } else {
-                    stillObjects.add(destroyBrick_up1, new Grass(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 2, Sprite.grass.getFxImage()));
-                    map[y / Sprite.SCALED_SIZE - 2][x / Sprite.SCALED_SIZE] = ' ';
-                }
-            }
 
-            if (stillObjects.get(destroyBrick_down1) instanceof Brick) {
-                stillObjects.remove(destroyBrick_down1);
-                if (map[y / Sprite.SCALED_SIZE + 2][x / Sprite.SCALED_SIZE] == 'f') {
-                    stillObjects.add(destroyBrick_down1, new FlameItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 2, Sprite.powerup_flames.getFxImage()));
-                } else if (map[y / Sprite.SCALED_SIZE + 2][x / Sprite.SCALED_SIZE] == 'x') {
-                    stillObjects.add(destroyBrick_down1, new Portal(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 2, Sprite.portal.getFxImage()));
-                } else {
-                    stillObjects.add(destroyBrick_down1, new Grass(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 2, Sprite.grass.getFxImage()));
-                    map[y / Sprite.SCALED_SIZE + 2][x / Sprite.SCALED_SIZE] = ' ';
-                }
-            }
+
+
+
+
         } else if (bombFrame > 250) {
             resetBomb();
             flag = false;

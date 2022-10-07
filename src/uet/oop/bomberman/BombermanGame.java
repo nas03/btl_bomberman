@@ -12,9 +12,10 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 
 import uet.oop.bomberman.entities.Bomb;
-import uet.oop.bomberman.entities.movingEntity.enemy.Balloon;
-import uet.oop.bomberman.entities.movingEntity.Bomber;
-import uet.oop.bomberman.entities.movingEntity.enemy.Enemy;
+import uet.oop.bomberman.entities.movingEntity.*;
+
+import uet.oop.bomberman.entities.movingEntity.enemy.*;
+
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.ArrayList;
@@ -27,12 +28,15 @@ public class BombermanGame extends Application {
     int bombY;
     private GraphicsContext gc;
     private Canvas canvas;
-
+    public int currentBomberX = 1;
+    public int currentBomberY = 1;
+    public int frame = 0;
     public List<Entity> stillObjects = new ArrayList<>();
     public List<Enemy> balloon = new ArrayList<>();
     Bomber bomberman;
+    Enemy oneal;
     int currentBomb = 0;
-    int bombLimit = 1;
+    int bombLimit = 10;
 
     Entity bomb = null;
     Map mapArray = new Map();
@@ -54,7 +58,7 @@ public class BombermanGame extends Application {
         balloon.add(new Balloon(13, 1, Sprite.balloom_left1.getFxImage()));
         balloon.add(new Balloon(18, 3, Sprite.balloom_left1.getFxImage()));
         balloon.add(new Balloon(24, 5, Sprite.balloom_left1.getFxImage()));
-
+        oneal = new Oneal(25,5,Sprite.oneal_right1.getFxImage());
         // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
@@ -133,7 +137,6 @@ public class BombermanGame extends Application {
     }
 
     public void createMap() {
-
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 Entity object;
@@ -156,14 +159,34 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
+        frame++;
+        System.out.println(frame);
         if(bomberman.isSpeedUp()) {
             bomberman.speedUp();
         }
         for (Enemy enemy : balloon) {
             if (enemy.getAlive()) {
-                enemy.enemyMovement(stillObjects);
+                enemy.enemyMovement(stillObjects,map);
+                if(enemy.touchBomber(bomberman.xPos,bomberman.yPos)) {
+                    bomberman.setAlive(false);
+                }
             }
         }
+        /*if (((Oneal)oneal).solved){
+            char[][] constMap = map;
+            oneal.complexEnemyMovement(stillObjects,constMap,1, 1);
+        }else {*/
+        if(frame == 400) {
+            currentBomberX = bomberman.xPos;
+            currentBomberY = bomberman.yPos;
+            frame = 0;
+            ((Oneal)oneal).locChange = true;
+        }
+        oneal.complexEnemyMovement(stillObjects,map,currentBomberX, currentBomberY);
+        ((Oneal)oneal).locChange = false;
+
+
+        //}
         //explosion handle
         if (bomb != null) {
 
@@ -198,6 +221,7 @@ public class BombermanGame extends Application {
                 enemy.render(gc);
             }
         }
+        oneal.render(gc);
         if (bomb != null) {
             if (((Bomb) bomb).isStartExplode()) {
                 if(bomberman.getEnhancedFlame()) {

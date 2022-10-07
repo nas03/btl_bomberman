@@ -15,6 +15,9 @@ public abstract class Enemy extends MovingEntity {
     public int frame = 0;
     private boolean isAlive = true;
 
+    public boolean touchBomber(int bomberX, int bomberY) {
+        return xPos == bomberX && bomberY == yPos;
+    }
     public boolean getAlive() {
         return isAlive;
     }
@@ -31,8 +34,8 @@ public abstract class Enemy extends MovingEntity {
     @Override
     public abstract void render(GraphicsContext gc);
 
-    public abstract void enemyMovement(List <Entity> stillObjects);
-
+    public abstract void enemyMovement(List <Entity> stillObjects, char[][] map);
+    public abstract void complexEnemyMovement(List<Entity> stillObjects, char[][] map, int bomberXPos,int bomberYPos);
     public void resetFrame() {
         if (frame == 500) {
             frame = 0;
