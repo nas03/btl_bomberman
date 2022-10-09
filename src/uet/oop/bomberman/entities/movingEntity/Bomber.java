@@ -9,17 +9,10 @@ import uet.oop.bomberman.graphics.Sprite;
 
 public class Bomber extends MovingEntity {
 
+    public int frame = 0;
     private boolean enhancedFlame = false;
-    private boolean speedUp = false;
-    private int speedUpTime = 0;
+    private int speed = 25;
 
-    public boolean isSpeedUp() {
-        return speedUp;
-    }
-
-    public void setSpeedUp(boolean speedUp) {
-        this.speedUp = speedUp;
-    }
 
     public void setEnhancedFlame(boolean enhancedFlame) {
         this.enhancedFlame = enhancedFlame;
@@ -42,31 +35,38 @@ public class Bomber extends MovingEntity {
     }
 
     public void speedUp() {
-        speedUpTime++;
-        if (speedUpTime < 100) {
-            setSpeed(2);
-        } else {
-            speedUpTime = 0;
-            setSpeed(1);
-            speedUp = false;
-        }
+        speed = 15;
     }
 
     @Override
     public void update() {
-
+        frame++;
+        if(frame % speed == 0) {
+            if (pressD) {
+                xPos += 1;
+            } else if (pressA) {
+                xPos -= 1;
+            } else if (pressW) {
+                yPos -= 1;
+            } else if (pressS) {
+                yPos += 1;
+            }
+        }
+        if(frame == 501) {
+            frame = 0;
+        }
     }
 
     @Override
     public void render(GraphicsContext gc) {
-        if (pressS) {
-            gc.drawImage(Sprite.player_down.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
-        } else if (pressA) {
+       if (pressA) {
             gc.drawImage(Sprite.player_left.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         } else if (pressW) {
             gc.drawImage(Sprite.player_up.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
-        } else {
+        } else if (pressD){
             gc.drawImage(Sprite.player_right.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
+        } else {
+            gc.drawImage(Sprite.player_down.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
     }
 
