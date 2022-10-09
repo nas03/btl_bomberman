@@ -43,6 +43,7 @@ public class BombermanGame extends Application {
     @Override
     public void start(Stage stage) {
         // Tao Canvas
+        Sound.backgroundMusic.play();
         canvas = new Canvas(992, 416);
         gc = canvas.getGraphicsContext2D();
         bomberman = new Bomber(xPos,yPos, Sprite.player_right.getFxImage());
@@ -125,6 +126,32 @@ public class BombermanGame extends Application {
 
                 else if (map[i][j] == '*') {
                     object = new Brick(j,i,Sprite.brick.getFxImage());
+        //}
+        //explosion handle
+        if (bomb != null) {
+
+            if (((Bomb) bomb).getExplode()) {
+                Sound.exploision.play();
+                for (Enemy enemy : balloon) {
+                    if(bomberman.getEnhancedFlame()) {
+                        if (((Bomb) bomb).enhancedBombTouched(enemy.xPos, enemy.yPos)) {
+                            Sound.enemyDie.play();
+                            enemy.setAlive(false);
+                        }
+                    }
+                    else if (((Bomb) bomb).bombTouched(enemy.xPos, enemy.yPos)) {
+                        Sound.enemyDie.play();
+                        enemy.setAlive(false);
+                    }
+                }
+                if(bomberman.getEnhancedFlame()) {
+                    if (((Bomb) bomb).enhancedBombTouched(bomberman.xPos, bomberman.yPos)) {
+                        bomberman.setAlive(false);
+                        Sound.bomber_die.play();
+                    }
+                }else if (((Bomb) bomb).bombTouched(bomberman.xPos, bomberman.yPos)) {
+                    bomberman.setAlive(false);
+                    Sound.bomber_die.play();
                 }
 
                 else {
