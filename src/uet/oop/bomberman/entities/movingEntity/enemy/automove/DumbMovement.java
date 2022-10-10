@@ -12,7 +12,12 @@ public class DumbMovement extends AutomaticMovement{
     }
 
     @Override
-    public void calculateComplexMovement(char[][] map, int enemyPosX, int enemyPosY, int bomberPosX, int bomberPosY) {
+    public void voidTypeComplexMovement(char[][] map, int enemyPosX, int enemyPosY, int bomberPosX, int bomberPosY) {
 
+    }
+
+    @Override
+    public int intTypeComplexMovement(char[][] map, int enemyPosX, int enemyPosY, int bomberPosX, int bomberPosY) {
+        return 0;
     }
 }

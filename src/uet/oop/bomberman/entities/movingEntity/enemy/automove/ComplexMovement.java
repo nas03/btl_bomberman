@@ -42,11 +42,16 @@ public class ComplexMovement extends AutomaticMovement {
     }
 
     @Override
-    public void calculateComplexMovement(char[][] map, int enemyPosX, int enemyPosY, int bomberPosX, int bomberPosY) {
+    public void voidTypeComplexMovement(char[][] map, int enemyPosX, int enemyPosY, int bomberPosX, int bomberPosY) {
             boolean b = recursiveSolve(enemyPosX, enemyPosY, bomberPosX, bomberPosY);
             if(b) {
                 solved = true;
             }
+    }
+
+    @Override
+    public int intTypeComplexMovement(char[][] map, int enemyPosX, int enemyPosY, int bomberPosX, int bomberPosY) {
+        return 0;
     }
 
 

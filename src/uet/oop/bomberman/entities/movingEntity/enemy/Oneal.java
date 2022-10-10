@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Map;
 import uet.oop.bomberman.entities.movingEntity.enemy.automove.ComplexMovement;
-import uet.oop.bomberman.entities.movingEntity.enemy.automove.SimpleMovement;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
@@ -54,7 +53,7 @@ public class Oneal extends Enemy{
             if((!solved) || locChange) {
                 previousMap = map;
                 ComplexMovement movement = new ComplexMovement(map);
-                movement.calculateComplexMovement(map, yPos, xPos, bomberYPos, bomberXPos);
+                movement.voidTypeComplexMovement(map, yPos, xPos, bomberYPos, bomberXPos);
                 if (movement.solved) {
                     moveMap = movement.correctPath;
                     solved = true;
