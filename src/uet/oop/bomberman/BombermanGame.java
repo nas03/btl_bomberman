@@ -46,6 +46,7 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) {
+        Sound.backgroundMusic.play();
         // Tao root container
         SceneController sceneController = new SceneController();
         VBox root = sceneController.prepare();
@@ -184,23 +185,27 @@ public class BombermanGame extends Application {
         //}
         //explosion handle
         if (bomb != null) {
-
+            Sound.exploision.play();
             if (((Bomb) bomb).getExplode()) {
                 for (Enemy enemy : balloon) {
                     if (bomberman.getEnhancedFlame()) {
                         if (((Bomb) bomb).enhancedBombTouched(enemy.xPos, enemy.yPos)) {
                             enemy.setAlive(false);
+                            Sound.enemyDie.play();
                         }
                     } else if (((Bomb) bomb).bombTouched(enemy.xPos, enemy.yPos)) {
                         enemy.setAlive(false);
+                        Sound.enemyDie.play();
                     }
                 }
                 if (bomberman.getEnhancedFlame()) {
                     if (((Bomb) bomb).enhancedBombTouched(bomberman.xPos, bomberman.yPos)) {
                         bomberman.setAlive(false);
+                        Sound.bomber_die.play();
                     }
                 } else if (((Bomb) bomb).bombTouched(bomberman.xPos, bomberman.yPos)) {
                     bomberman.setAlive(false);
+                    Sound.bomber_die.play();
                 }
             }
         }
