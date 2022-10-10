@@ -1,6 +1,5 @@
 package uet.oop.bomberman.entities;
 
-import java.util.Objects;
 
 public class Map {
 
@@ -27,8 +26,4 @@ public class Map {
     return map;
   }
 
-
-  void renderMap() {
-    //Load image
-  }
 }

@@ -8,3 +8,6 @@
 .idea/workspace.xml
 btl_bomberman.iml
 .idea/checkstyle-idea.xml
+src/uet/oop/bomberman/entities/movingEntity/.DS_Store
+src/uet/oop/bomberman/entities/movingEntity/enemy/.DS_Store
+*.xml
