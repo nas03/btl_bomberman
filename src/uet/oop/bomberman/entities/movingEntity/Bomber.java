@@ -10,6 +10,7 @@ import uet.oop.bomberman.graphics.Sprite;
 public class Bomber extends MovingEntity {
 
     public int frame = 0;
+    public boolean ableToMove = true;
     private boolean enhancedFlame = false;
     private int speed = 25;
 
@@ -40,8 +41,8 @@ public class Bomber extends MovingEntity {
 
     @Override
     public void update() {
-        frame++;
-        if(frame % speed == 0) {
+        /*frame++;
+
             if (pressD) {
                 xPos += 1;
             } else if (pressA) {
@@ -51,24 +52,95 @@ public class Bomber extends MovingEntity {
             } else if (pressS) {
                 yPos += 1;
             }
-        }
-        if(frame == 501) {
-            frame = 0;
-        }
+        }*/
+
     }
 
     @Override
     public void render(GraphicsContext gc) {
-       if (pressA) {
-            gc.drawImage(Sprite.player_left.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
+        if (pressA) {
+
+            renderA(gc);
+
         } else if (pressW) {
-            gc.drawImage(Sprite.player_up.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
-        } else if (pressD){
-            gc.drawImage(Sprite.player_right.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
+
+            renderW(gc);
+
+        } else if (pressD) {
+
+            renderD(gc);
+
+        } else if(pressS){
+
+            renderS(gc);
         } else {
-            gc.drawImage(Sprite.player_down.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
+            gc.drawImage(Sprite.player_right.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE);
         }
+
     }
+
+    public void renderA(GraphicsContext gc) {
+        frame++;
+        if (frame < 11) {
+            gc.drawImage(Sprite.player_left.getFxImage(), xPos * Sprite.SCALED_SIZE + 32 - frame, yPos * Sprite.SCALED_SIZE);
+        } else if (frame < 21) {
+            gc.drawImage(Sprite.player_left_1.getFxImage(), xPos * Sprite.SCALED_SIZE + 32 - frame, yPos * Sprite.SCALED_SIZE);
+        } else if (frame < 31) {
+            gc.drawImage(Sprite.player_left_2.getFxImage(), xPos * Sprite.SCALED_SIZE + 32 - frame, yPos * Sprite.SCALED_SIZE);
+        }
+        if (frame == 30) {
+            frame = 0;
+            pressA = false;
+        }
+
+    }
+    public void renderD(GraphicsContext gc) {
+        frame++;
+
+        if (frame < 11) {
+            gc.drawImage(Sprite.player_right.getFxImage(), xPos * Sprite.SCALED_SIZE - 32 +  frame, yPos * Sprite.SCALED_SIZE);
+        } else if (frame < 21) {
+            gc.drawImage(Sprite.player_right_1.getFxImage(), xPos * Sprite.SCALED_SIZE - 32 +  frame, yPos * Sprite.SCALED_SIZE);
+        } else if (frame < 31) {
+            gc.drawImage(Sprite.player_right_2.getFxImage(), xPos * Sprite.SCALED_SIZE - 32 + frame, yPos * Sprite.SCALED_SIZE);
+        }
+        if (frame == 30) {
+            frame = 0;
+            pressD = false;
+        }
+
+    }
+    public void renderS(GraphicsContext gc) {
+        frame++;
+        if (frame < 11) {
+            gc.drawImage(Sprite.player_down.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE -32 +  frame);
+        } else if (frame < 21) {
+            gc.drawImage(Sprite.player_down_1.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE -32 +  frame);
+        } else if (frame < 31) {
+            gc.drawImage(Sprite.player_down_2.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE -32 +  frame);
+        }
+        if (frame == 30) {
+            frame = 0;
+            pressS = false;
+        }
+
+    }
+    public void renderW(GraphicsContext gc) {
+        frame++;
+        if (frame < 11) {
+            gc.drawImage(Sprite.player_up.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE + 32 - frame);
+        } else if (frame < 21) {
+            gc.drawImage(Sprite.player_up_1.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE + 32 - frame);
+        } else if (frame < 31) {
+            gc.drawImage(Sprite.player_up_2.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE + 32 - frame);
+        }
+        if (frame == 30) {
+            frame = 0;
+            pressW = false;
+        }
+
+    }
+
 
 }
 
