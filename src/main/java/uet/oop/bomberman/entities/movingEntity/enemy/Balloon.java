@@ -3,14 +3,10 @@ package uet.oop.bomberman.entities.movingEntity.enemy;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.movingEntity.MovingEntity;
 import uet.oop.bomberman.entities.movingEntity.enemy.automove.SimpleMovement;
 import uet.oop.bomberman.graphics.Sprite;
 
-import java.util.ArrayList;
-
 import java.util.List;
-import java.util.Random;
 
 public class Balloon extends Enemy {
 

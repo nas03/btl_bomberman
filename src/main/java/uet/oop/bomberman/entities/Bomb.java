@@ -1,10 +1,10 @@
 package uet.oop.bomberman.entities;
 
-import java.util.List;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.graphics.Sprite;
+
+import java.util.List;
 
 public class Bomb extends Entity {
     public int bombFrame = 0;

@@ -1,7 +1,5 @@
 package uet.oop.bomberman.entities.movingEntity.enemy.automove;
 
-import uet.oop.bomberman.entities.movingEntity.enemy.automove.AutomaticMovement;
-
 public class ComplexMovement extends AutomaticMovement {
     // Su dung thuat toan DFS
     public int row;
