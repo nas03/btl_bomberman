@@ -1,13 +1,12 @@
 package uet.oop.bomberman.entities;
 import javafx.scene.canvas.GraphicsContext;
+import uet.oop.bomberman.entities.movingEntity.Bomber;
+import uet.oop.bomberman.entities.movingEntity.MovingEntity;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 
 public class Map {
@@ -46,7 +45,40 @@ public class Map {
        }
     }
 
-    public void getMap()...
+    //public void getMap()...
+
+    public void loadGame() {
+        try {
+            InputStream inputStream = getClass().getResourceAsStream("/SaveGame/saveFile.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+            MovingEntity.xPos = Integer.parseInt(reader.readLine());// .readLine : read a line of text.
+            MovingEntity.yPos = Integer.parseInt(reader.readLine());
+
+            reader.close();
+
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Bomber bomber = new Bomber(MovingEntity.xPos , MovingEntity.yPos , Sprite.player_right.getFxImage());
+    }
+
+    public void saveGame(char map[][]) {
+        try{
+            BufferedWriter writer = new BufferedWriter(new FileWriter("saveFile.txt"));
+            writer.write("" + MovingEntity.xPos);
+            writer.newLine();
+            writer.write("" + MovingEntity.yPos);
+            writer.newLine();
+
+            writer.close();
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
 
   /**

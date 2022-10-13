@@ -13,8 +13,8 @@ public abstract class MovingEntity {
     public boolean isAlive = true;
     public boolean pressW, pressA, pressS, pressD;
     private int speed = 1;
-    public int xPos = 1;
-    public int yPos = 1;
+    public static int xPos = 1;
+    public static int yPos = 1;
 
     protected Image img;
 
