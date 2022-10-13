@@ -2,8 +2,9 @@ package uet.oop.bomberman.entities.movingEntity;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.entities.Brick;
+import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.Wall;
 
 import java.util.List;
 public abstract class MovingEntity {

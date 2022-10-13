@@ -1,7 +1,5 @@
 package uet.oop.bomberman.entities.movingEntity.enemy.automove;
 
-import java.util.Random;
-
 public class SimpleMovement extends AutomaticMovement{
     @Override
     public int calculateMovement() {

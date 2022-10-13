@@ -3,18 +3,9 @@ package uet.oop.bomberman;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import uet.oop.bomberman.entities.Bomb;
-import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.movingEntity.Bomber;
-import uet.oop.bomberman.graphics.Sprite;
-
-import java.util.List;
 
 public class SceneController{
     public String status = "open";
@@ -60,6 +51,17 @@ public class SceneController{
         root.getChildren().add(canvas);
         //quit.setOnAction(e -> System.out.println("Clicked"));
         return root;
+    }
+
+    public VBox gameMenu() {
+        VBox gameMenu = new VBox();
+        Button playGame = new Button("playGame");
+        Button howToPlay = new Button("How to Play");
+        Button quit = new Button("Quit");
+        quit.setLayoutX(100);
+        quit.setLayoutY(150);
+        gameMenu.getChildren().addAll(playGame,howToPlay,quit);
+        return gameMenu;
     }
 
 }
