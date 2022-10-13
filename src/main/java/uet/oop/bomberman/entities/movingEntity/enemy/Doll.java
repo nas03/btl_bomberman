@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Wall;
-import uet.oop.bomberman.entities.movingEntity.Bomber;
 import uet.oop.bomberman.entities.movingEntity.enemy.automove.NormalMovement;
 import uet.oop.bomberman.graphics.Sprite;
 
