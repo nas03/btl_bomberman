@@ -7,6 +7,8 @@ import uet.oop.bomberman.entities.Map;
 import uet.oop.bomberman.entities.movingEntity.enemy.automove.ComplexMovement;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 public class Oneal extends Enemy {

@@ -5,7 +5,7 @@ module uet.oop.bomberman {
     requires org.controlsfx.controls;
     requires javafx.media;
     requires java.desktop;
-
+    opens levels;
     opens uet.oop.bomberman to javafx.fxml;
     exports uet.oop.bomberman;
 }
