@@ -68,6 +68,7 @@ public class Bomb extends Entity {
             gc.drawImage(Sprite.bomb.getFxImage(), x, y);
         } else if (bombFrame < 150) {
             explode = true;
+            Sound.explosion.play();
             gc.drawImage(Sprite.bomb_exploded.getFxImage(), x, y);
         } else if (bombFrame < 155) {
             gc.drawImage(Sprite.bomb_exploded1.getFxImage(), x, y);
@@ -100,7 +101,12 @@ public class Bomb extends Entity {
                     stillObjects.add(destroyBrick_left, new FlameItem(x / Sprite.SCALED_SIZE - 1, y / Sprite.SCALED_SIZE, Sprite.powerup_flames.getFxImage()));
                 } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] == 'x') {
                     stillObjects.add(destroyBrick_left, new Portal(x / Sprite.SCALED_SIZE - 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
-                } else if(map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] == '*'){
+                }else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] == 'b') {
+                    stillObjects.add(destroyBrick_left, new BombItem(x / Sprite.SCALED_SIZE - 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                }else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] == 's') {
+                    stillObjects.add(destroyBrick_left, new SpeedItem(x / Sprite.SCALED_SIZE - 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                }
+                else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] == '*') {
                     stillObjects.add(destroyBrick_left, new Grass(x / Sprite.SCALED_SIZE - 1, y / Sprite.SCALED_SIZE, Sprite.grass.getFxImage()));
                     map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] = ' ';
                 }
@@ -109,13 +115,17 @@ public class Bomb extends Entity {
 
             if (stillObjects.get(destroyBrick_right) instanceof Brick) {
                 stillObjects.remove(destroyBrick_right);
-                if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +1] == 'f') {
+                if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] == 'f') {
                     stillObjects.add(destroyBrick_right, new FlameItem(x / Sprite.SCALED_SIZE + 1, y / Sprite.SCALED_SIZE, Sprite.powerup_flames.getFxImage()));
-                } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +1] == 'x') {
+                } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] == 'x') {
                     stillObjects.add(destroyBrick_right, new Portal(x / Sprite.SCALED_SIZE + 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
-                } else if(map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +1] == '*'){
+                }else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] == 'b') {
+                    stillObjects.add(destroyBrick_right, new BombItem(x / Sprite.SCALED_SIZE + 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                }else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] == 's') {
+                    stillObjects.add(destroyBrick_right, new SpeedItem(x / Sprite.SCALED_SIZE + 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                }else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] == '*') {
                     stillObjects.add(destroyBrick_right, new Grass(x / Sprite.SCALED_SIZE + 1, y / Sprite.SCALED_SIZE, Sprite.grass.getFxImage()));
-                    map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +1] = ' ';
+                    map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] = ' ';
                 }
             }
 
@@ -125,7 +135,12 @@ public class Bomb extends Entity {
                     stillObjects.add(destroyBrick_up, new FlameItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 1, Sprite.powerup_flames.getFxImage()));
                 } else if (map[y / Sprite.SCALED_SIZE - 1][x / Sprite.SCALED_SIZE] == 'x') {
                     stillObjects.add(destroyBrick_up, new Portal(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 1, Sprite.portal.getFxImage()));
-                } else {
+                }else if (map[y / Sprite.SCALED_SIZE - 1][x / Sprite.SCALED_SIZE] == 'b') {
+                    stillObjects.add(destroyBrick_up, new BombItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 1, Sprite.portal.getFxImage()));
+                }else if (map[y / Sprite.SCALED_SIZE - 1][x / Sprite.SCALED_SIZE] == 's') {
+                    stillObjects.add(destroyBrick_up, new SpeedItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 1, Sprite.portal.getFxImage()));
+                }
+                else {
                     stillObjects.add(destroyBrick_up, new Grass(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 1, Sprite.grass.getFxImage()));
                     map[y / Sprite.SCALED_SIZE - 1][x / Sprite.SCALED_SIZE] = ' ';
                 }
@@ -134,10 +149,15 @@ public class Bomb extends Entity {
             if (stillObjects.get(destroyBrick_down) instanceof Brick) {
                 stillObjects.remove(destroyBrick_down);
                 if (map[y / Sprite.SCALED_SIZE + 1][x / Sprite.SCALED_SIZE] == 'f') {
-                    stillObjects.add(destroyBrick_down, new FlameItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.powerup_flames.getFxImage()));
+                    stillObjects.add(destroyBrick_down, new FlameItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.powerup_bombs.getFxImage()));
                 } else if (map[y / Sprite.SCALED_SIZE + 1][x / Sprite.SCALED_SIZE] == 'x') {
                     stillObjects.add(destroyBrick_down, new Portal(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.portal.getFxImage()));
-                } else {
+                }else if (map[y / Sprite.SCALED_SIZE + 1][x / Sprite.SCALED_SIZE] == 'b') {
+                    stillObjects.add(destroyBrick_down, new BombItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.portal.getFxImage()));
+                }else if (map[y / Sprite.SCALED_SIZE + 1][x / Sprite.SCALED_SIZE] == 's') {
+                    stillObjects.add(destroyBrick_down, new SpeedItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.portal.getFxImage()));
+                }
+                else {
                     stillObjects.add(destroyBrick_down, new Grass(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.grass.getFxImage()));
                     map[y / Sprite.SCALED_SIZE + 1][x / Sprite.SCALED_SIZE] = ' ';
                 }
@@ -155,6 +175,8 @@ public class Bomb extends Entity {
             gc.drawImage(Sprite.bomb.getFxImage(), x, y);
         } else if (bombFrame < 150) {
             explode = true;
+            Sound.explosion.play();
+
             gc.drawImage(Sprite.bomb_exploded.getFxImage(), x, y);
         } else if (bombFrame < 200) {
             gc.drawImage(Sprite.bomb_exploded1.getFxImage(), x, y);
@@ -199,7 +221,12 @@ public class Bomb extends Entity {
                         stillObjects.add(destroyBrick_down1, new FlameItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 2, Sprite.powerup_flames.getFxImage()));
                     } else if (map[y / Sprite.SCALED_SIZE + 2][x / Sprite.SCALED_SIZE] == 'x') {
                         stillObjects.add(destroyBrick_down1, new Portal(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 2, Sprite.portal.getFxImage()));
-                    } else {
+                    }else if (map[y / Sprite.SCALED_SIZE + 2][x / Sprite.SCALED_SIZE] == 'b') {
+                        stillObjects.add(destroyBrick_down1, new BombItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 2, Sprite.portal.getFxImage()));
+                    }else if (map[y / Sprite.SCALED_SIZE + 2][x / Sprite.SCALED_SIZE] == 's') {
+                        stillObjects.add(destroyBrick_down1, new SpeedItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 2, Sprite.portal.getFxImage()));
+                    }
+                    else {
                         stillObjects.add(destroyBrick_down1, new Grass(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 2, Sprite.grass.getFxImage()));
                         map[y / Sprite.SCALED_SIZE + 2][x / Sprite.SCALED_SIZE] = ' ';
                     }
@@ -218,7 +245,12 @@ public class Bomb extends Entity {
                         stillObjects.add(destroyBrick_left1, new FlameItem(x / Sprite.SCALED_SIZE - 2, y / Sprite.SCALED_SIZE, Sprite.powerup_flames.getFxImage()));
                     } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] == 'x') {
                         stillObjects.add(destroyBrick_left1, new Portal(x / Sprite.SCALED_SIZE - 2, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
-                    } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] == '*') {
+                    }else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] == 'b') {
+                        stillObjects.add(destroyBrick_left1, new BombItem(x / Sprite.SCALED_SIZE - 2, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                    }else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] == 's') {
+                        stillObjects.add(destroyBrick_left1, new SpeedItem(x / Sprite.SCALED_SIZE - 2, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                    }
+                    else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] == '*') {
                         stillObjects.add(destroyBrick_left1, new Grass(x / Sprite.SCALED_SIZE - 2, y / Sprite.SCALED_SIZE, Sprite.grass.getFxImage()));
                         map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 2] = ' ';
                     }
@@ -237,7 +269,12 @@ public class Bomb extends Entity {
                         stillObjects.add(destroyBrick_right1, new FlameItem(x / Sprite.SCALED_SIZE + 2, y / Sprite.SCALED_SIZE, Sprite.powerup_flames.getFxImage()));
                     } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 2] == 'x') {
                         stillObjects.add(destroyBrick_right1, new Portal(x / Sprite.SCALED_SIZE + 2, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
-                    } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 2] == '*') {
+                    }else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 2] == 'b') {
+                        stillObjects.add(destroyBrick_right1, new BombItem(x / Sprite.SCALED_SIZE + 2, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                    }else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 2] == 's') {
+                        stillObjects.add(destroyBrick_right1, new SpeedItem(x / Sprite.SCALED_SIZE + 2, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                    }
+                    else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 2] == '*') {
                         stillObjects.add(destroyBrick_right1, new Grass(x / Sprite.SCALED_SIZE + 2, y / Sprite.SCALED_SIZE, Sprite.grass.getFxImage()));
                         map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 2] = ' ';
                     }
@@ -256,7 +293,12 @@ public class Bomb extends Entity {
                         stillObjects.add(destroyBrick_up1, new FlameItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 2, Sprite.powerup_flames.getFxImage()));
                     } else if (map[y / Sprite.SCALED_SIZE - 2][x / Sprite.SCALED_SIZE] == 'x') {
                         stillObjects.add(destroyBrick_up1, new Portal(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 2, Sprite.portal.getFxImage()));
-                    } else {
+                    }else if (map[y / Sprite.SCALED_SIZE - 2][x / Sprite.SCALED_SIZE] == 'b') {
+                        stillObjects.add(destroyBrick_up1, new BombItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 2, Sprite.portal.getFxImage()));
+                    }else if (map[y / Sprite.SCALED_SIZE - 2][x / Sprite.SCALED_SIZE] == 's') {
+                        stillObjects.add(destroyBrick_up1, new SpeedItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 2, Sprite.portal.getFxImage()));
+                    }
+                    else {
                         stillObjects.add(destroyBrick_up1, new Grass(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 2, Sprite.grass.getFxImage()));
                         map[y / Sprite.SCALED_SIZE - 2][x / Sprite.SCALED_SIZE] = ' ';
                     }
@@ -270,9 +312,13 @@ public class Bomb extends Entity {
                 stillObjects.remove(destroyBrick_left);
                 if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] == 'f') {
                     stillObjects.add(destroyBrick_left, new FlameItem(x / Sprite.SCALED_SIZE - 1, y / Sprite.SCALED_SIZE, Sprite.powerup_flames.getFxImage()));
+                } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] == 'b') {
+                    stillObjects.add(destroyBrick_left, new BombItem(x / Sprite.SCALED_SIZE - 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] == 's') {
+                    stillObjects.add(destroyBrick_left, new SpeedItem(x / Sprite.SCALED_SIZE - 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
                 } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] == 'x') {
                     stillObjects.add(destroyBrick_left, new Portal(x / Sprite.SCALED_SIZE - 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
-                } else if(map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] == '*'){
+                } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] == '*') {
                     stillObjects.add(destroyBrick_left, new Grass(x / Sprite.SCALED_SIZE - 1, y / Sprite.SCALED_SIZE, Sprite.grass.getFxImage()));
                     map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE - 1] = ' ';
                 }
@@ -280,13 +326,18 @@ public class Bomb extends Entity {
 
             if (stillObjects.get(destroyBrick_right) instanceof Brick) {
                 stillObjects.remove(destroyBrick_right);
-                if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +1] == 'f') {
+                if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] == 'f') {
                     stillObjects.add(destroyBrick_right, new FlameItem(x / Sprite.SCALED_SIZE + 1, y / Sprite.SCALED_SIZE, Sprite.powerup_flames.getFxImage()));
-                } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +1] == 'x') {
+                } else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] == 'x') {
                     stillObjects.add(destroyBrick_right, new Portal(x / Sprite.SCALED_SIZE + 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
-                } else if(map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +1] == '*'){
+                }else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] == 'b') {
+                    stillObjects.add(destroyBrick_right, new BombItem(x / Sprite.SCALED_SIZE + 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                }else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] == 's') {
+                    stillObjects.add(destroyBrick_right, new SpeedItem(x / Sprite.SCALED_SIZE + 1, y / Sprite.SCALED_SIZE, Sprite.portal.getFxImage()));
+                }
+                else if (map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] == '*') {
                     stillObjects.add(destroyBrick_right, new Grass(x / Sprite.SCALED_SIZE + 1, y / Sprite.SCALED_SIZE, Sprite.grass.getFxImage()));
-                    map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE +1] = ' ';
+                    map[y / Sprite.SCALED_SIZE][x / Sprite.SCALED_SIZE + 1] = ' ';
                 }
             }
 
@@ -296,7 +347,12 @@ public class Bomb extends Entity {
                     stillObjects.add(destroyBrick_up, new FlameItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 1, Sprite.powerup_flames.getFxImage()));
                 } else if (map[y / Sprite.SCALED_SIZE - 1][x / Sprite.SCALED_SIZE] == 'x') {
                     stillObjects.add(destroyBrick_up, new Portal(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 1, Sprite.portal.getFxImage()));
-                } else {
+                }else if (map[y / Sprite.SCALED_SIZE - 1][x / Sprite.SCALED_SIZE] == 'b') {
+                    stillObjects.add(destroyBrick_up, new BombItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 1, Sprite.portal.getFxImage()));
+                }else if (map[y / Sprite.SCALED_SIZE - 1][x / Sprite.SCALED_SIZE] == 's') {
+                    stillObjects.add(destroyBrick_up, new SpeedItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 1, Sprite.portal.getFxImage()));
+                }
+                else {
                     stillObjects.add(destroyBrick_up, new Grass(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE - 1, Sprite.grass.getFxImage()));
                     map[y / Sprite.SCALED_SIZE - 1][x / Sprite.SCALED_SIZE] = ' ';
                 }
@@ -308,18 +364,17 @@ public class Bomb extends Entity {
                     stillObjects.add(destroyBrick_down, new FlameItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.powerup_flames.getFxImage()));
                 } else if (map[y / Sprite.SCALED_SIZE + 1][x / Sprite.SCALED_SIZE] == 'x') {
                     stillObjects.add(destroyBrick_down, new Portal(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.portal.getFxImage()));
-                } else {
+                }else if (map[y / Sprite.SCALED_SIZE + 1][x / Sprite.SCALED_SIZE] == 'b') {
+                    stillObjects.add(destroyBrick_down, new BombItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.portal.getFxImage()));
+                }else if (map[y / Sprite.SCALED_SIZE + 1][x / Sprite.SCALED_SIZE] == 's') {
+                    stillObjects.add(destroyBrick_down, new SpeedItem(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.portal.getFxImage()));
+                }
+                else {
                     stillObjects.add(destroyBrick_down, new Grass(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.grass.getFxImage()));
                     map[y / Sprite.SCALED_SIZE + 1][x / Sprite.SCALED_SIZE] = ' ';
                 }
             }
             //enhanceExplosion
-
-
-
-
-
-
 
 
         } else if (bombFrame > 250) {
@@ -336,9 +391,9 @@ public class Bomb extends Entity {
             return true;
         }
         if (explode1) {
-            if (xPos < x / 32 + 2 && yPos == y / 32 && xPos >= x/32 -2) {
+            if (xPos < x / 32 + 2 && yPos == y / 32 && xPos >= x / 32 - 2) {
                 return true;
-            } else if (xPos == x/32 && yPos >= y/32 - 2 && yPos <= y/32 + 2 ) {
+            } else if (xPos == x / 32 && yPos >= y / 32 - 2 && yPos <= y / 32 + 2) {
                 return true;
             }
         }
