@@ -43,7 +43,6 @@ public class Balloon extends Enemy {
 
     @Override
     public void enemyMovement(List<Entity> stillObjects, char[][] map) {
-
         if (frame == 0) {
             int direction = movement.calculateMovement();
             if (direction == 1 && canMove(stillObjects, xPos - 1, yPos)) {

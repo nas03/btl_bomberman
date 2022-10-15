@@ -20,10 +20,10 @@ public class Oneal extends Enemy {
 
     public boolean solved = false;
     public int mapResetFrame = 0;
-    Map initMap = new Map();
+    Map initMap = new Map("src/main/resources/levels/Level1.txt");
     public boolean locChange = false;
     public boolean[][] moveMap = new boolean[13][31];
-    public char[][] previousMap = initMap.getMap();
+    public char[][] previousMap = initMap.map;
 
     public boolean getSolve() {
         return solved;
