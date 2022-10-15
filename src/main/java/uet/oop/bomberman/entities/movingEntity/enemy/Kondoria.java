@@ -31,7 +31,7 @@ public class Kondoria extends Enemy {
 
     @Override
     public void update() {
-        if(spellCounter == 4){
+        if(spellCounter == 30){
             skillReady = true;
             spellCounter = 0;
         }
@@ -152,8 +152,6 @@ public class Kondoria extends Enemy {
        int randomX = random.nextInt(30) + 1;
        int randomY = random.nextInt(12) + 1;
        if(!(stillObjects.get(randomY*31 + randomX) instanceof Brick || stillObjects.get(randomY*31 + randomX) instanceof Wall)) {
-           spawn++;
-           if(spawn <= spawnLimit)
                return new Balloon(randomX, randomY, Sprite.balloom_right1.getFxImage());
        }
        return null;
