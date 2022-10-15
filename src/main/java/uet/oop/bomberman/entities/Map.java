@@ -3,15 +3,12 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.canvas.GraphicsContext;
 import uet.oop.bomberman.entities.movingEntity.Bomber;
-import uet.oop.bomberman.entities.movingEntity.MovingEntity;
+import uet.oop.bomberman.entities.movingEntity.enemy.*;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -20,7 +17,12 @@ import static uet.oop.bomberman.BombermanGame.WIDTH;
 import static uet.oop.bomberman.entities.Entity.HEIGHT;
 
 public class Map {
-
+    public List<Enemy> balloon = new ArrayList<>();
+    public List<Enemy> minvo = new ArrayList<>();
+    public List<Enemy> oneal = new ArrayList<>();
+    public List<Enemy> kondoria = new ArrayList<>();
+    public List<Enemy> doll = new ArrayList<>();
+    public Bomber bomberman = new Bomber(1,1,Sprite.player_right.getFxImage());
     public List<Entity> stillObjects = new ArrayList<>();
     public char[][] map = new char[13][31];
 
@@ -41,9 +43,10 @@ public class Map {
         }
 
     }
-    public Map() {
+    public Map(String path) {
         try {
-            getMapString("src/main/resources/levels/Level1.txt");
+            mapIndex = 0;
+            getMapString(path);
             mapArray = MAP.toCharArray();
             for (int i = 0; i < 13; i++) {
                 for (int j = 0; j < 31; j++) {
@@ -56,7 +59,7 @@ public class Map {
 
     }
 
-    public void saveGameMap(char[][] map) {
+    public void saveGame(char[][] map) {
         try {
             FileWriter out = new FileWriter("src/main/resources/game_progress/game.txt");
             for (int i = 0; i < 13; i++) {
@@ -68,6 +71,91 @@ public class Map {
         }
         catch (Exception e) {
             System.out.println("Cant load game.txt");
+        }
+    }
+    public void saveMovingEntity(List<Enemy> balloons, List<Enemy> oneals, List<Enemy> minvos, List<Enemy> kondorias, List<Enemy> dolls, Bomber bomberman) {
+        saveEnemy("src/main/resources/game_progress/balloon.txt",balloons);
+        saveEnemy("src/main/resources/game_progress/oneal.txt",oneals);
+        saveEnemy("src/main/resources/game_progress/doll.txt",dolls);
+        saveEnemy("src/main/resources/game_progress/kondoria.txt",kondorias);
+        saveEnemy("src/main/resources/game_progress/minvo.txt",minvos);
+        saveBomber("src/main/resources/game_progress/bomber.txt",bomberman);
+    }
+    public void saveEnemy(String path, List <Enemy> enemies) {
+        try {
+            FileWriter out = new FileWriter(path);
+            for (Enemy enemy : enemies) {
+                if (enemy.getAlive()) {
+                    out.write(enemy.xPos + " " + enemy.yPos + '\n');
+                }
+            }
+            out.close();
+        } catch (Exception e) {
+            System.out.println("Cant save enemy");
+        }
+    }
+    public List <Enemy> loadEnemyFromTxt(String path,Enemy type) {
+        List<Enemy> enemies = new ArrayList<>();
+        try {
+            Scanner in = new Scanner(new BufferedReader(new FileReader(path)));
+            while (in.hasNext()) {
+                String s = in.nextLine();
+                String[] splitter = s.split(" ");
+                int a = Integer.parseInt(splitter[0]);
+                int b = Integer.parseInt(splitter[1]);
+                if(type instanceof Balloon) {
+                    enemies.add(new Balloon(a,b,Sprite.balloom_right1.getFxImage()));
+                } else if(type instanceof Doll) {
+                    enemies.add(new Doll(a,b, Sprite.doll_right1.getFxImage()));
+                } else if(type instanceof Oneal) {
+                    enemies.add(new Oneal(a,b,Sprite.oneal_right1.getFxImage()));
+                } else if(type instanceof Kondoria) {
+                    enemies.add(new Kondoria(a,b,Sprite.kondoria_right1.getFxImage()));
+                } else  {
+                    enemies.add(new Minvo(a,b,Sprite.minvo_right1.getFxImage()));
+                }
+            }
+        } catch(Exception e ) {
+            System.out.println("Cant load data from resources");
+        }
+        return enemies;
+    }
+    public Bomber loadBombermanFromTxt() {
+        try {
+            Scanner scan  = new Scanner(new BufferedReader(new FileReader("src/main/resources/game_progress/bomber.txt")));
+            String pos = scan.nextLine();
+            String[] position = pos.split(" ");
+            int a = Integer.parseInt(position[0]);
+            int b = Integer.parseInt(position[1]);
+            Bomber bomberman = new Bomber(a,b,Sprite.player_right.getFxImage());
+            String bombLimit = scan.nextLine();
+            bomberman.bombLimit = Integer.parseInt(bombLimit);
+            String enhancedFlame = scan.nextLine();
+            if(enhancedFlame.equals("true")) {
+                bomberman.setEnhancedFlame(true);
+            } else {
+                bomberman.setEnhancedFlame(false);
+            }
+            return bomberman;
+        }catch (Exception e) {
+            System.out.println("cant load bomber.txt");
+        }
+        return null;
+    }
+    public void saveBomber(String path, Bomber bomberman) {
+        try {
+            FileWriter out = new FileWriter(path);
+           out.write(bomberman.xPos + " " + bomberman.yPos + '\n');
+           String bombLimit = String.valueOf(bomberman.bombLimit);
+           out.write(bombLimit + '\n');
+           if(bomberman.getEnhancedFlame()) {
+               out.write("true\n" );
+           } else {
+               out.write("false\n");
+           }
+           out.close();
+        } catch (Exception e) {
+            System.out.println("Cant save enemy\n");
         }
     }
     public char[][] loadSavedMap() {
@@ -86,20 +174,8 @@ public class Map {
         }
         return map;
     }
-    public static void main(String[] args) throws URISyntaxException, IOException {
 
-    }
-    //public void getMap()...
-
-    public char[][] getMap() {
-        return map;
-    }
-
-    public void setMap(char[][] map) {
-        this.map = map;
-    }
-
-    public List<Entity> createMap() {
+    public List <Entity> createMap(char[][] map) {
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 Entity object;
@@ -122,6 +198,104 @@ public class Map {
             }
         }
         return stillObjects;
-
     }
+
+    public List<Enemy> getBalloon() {
+        balloon.removeAll(balloon);
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (map[i][j] == '1') {
+                    balloon.add(new Balloon(j, i, Sprite.balloom_right1.getFxImage()));
+                }
+            }
+        }
+        return balloon;
+    }
+
+    public List<Enemy> getMinvo() {
+        minvo.removeAll(minvo);
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (map[i][j] == '3') {
+                    minvo.add(new Minvo(j, i, Sprite.balloom_right1.getFxImage()));
+                }
+            }
+        }
+        return minvo;
+    }
+
+    public List<Enemy> getOneal() {
+        oneal.removeAll(oneal);
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (map[i][j] == '2') {
+                    oneal.add(new Oneal(j, i, Sprite.balloom_right1.getFxImage()));
+                }
+            }
+        }
+        return oneal;
+    }
+
+    public List<Enemy> getKondoria() {
+        kondoria.removeAll(kondoria);
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (map[i][j] == '4') {
+                    kondoria.add(new Kondoria(j, i, Sprite.balloom_right1.getFxImage()));
+                }
+            }
+        }
+        return kondoria;
+    }
+
+    public List<Enemy> getDoll() {
+        doll.removeAll(doll);
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (map[i][j] == '5') {
+                    doll.add(new Doll(j, i, Sprite.balloom_right1.getFxImage()));
+                }
+            }
+        }
+        return doll;
+    }
+
+    public Bomber getBomberman() {
+        bomberman = null;
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (map[i][j] == 'p') {
+                   bomberman = new Bomber(j, i, Sprite.balloom_right1.getFxImage());
+                }
+            }
+        }
+        return bomberman;
+    }
+    public static void main(String[] args) {
+        Enemy type  = new Balloon(1,1,Sprite.balloom_left3.getFxImage());
+        List<Enemy> enemies = new ArrayList<>();
+        try {
+            Scanner in = new Scanner(new BufferedReader(new FileReader("src/main/resources/game_progress/balloon.txt")));
+            while (in.hasNext()) {
+                String s = in.nextLine();
+                String[] splitter = s.split(" ");
+                int a = Integer.parseInt(splitter[0]);
+                int b = Integer.parseInt(splitter[1]);
+                if(type instanceof Balloon) {
+                    enemies.add(new Balloon(a,b,Sprite.balloom_right1.getFxImage()));
+                } else if(type instanceof Doll) {
+                    enemies.add(new Doll(a,b, Sprite.doll_right1.getFxImage()));
+                } else if(type instanceof Oneal) {
+                    enemies.add(new Oneal(a,b,Sprite.oneal_right1.getFxImage()));
+                } else if(type instanceof Kondoria) {
+                    enemies.add(new Kondoria(a,b,Sprite.kondoria_right1.getFxImage()));
+                } else  {
+                    enemies.add(new Minvo(a,b,Sprite.minvo_right1.getFxImage()));
+                }
+            }
+        } catch(Exception e ) {
+            System.out.println("Cant load data from resources");
+        }
+    }
+
 }

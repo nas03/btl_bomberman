@@ -3,7 +3,6 @@ package uet.oop.bomberman;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,35 +11,37 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.movingEntity.Bomber;
 import uet.oop.bomberman.entities.movingEntity.enemy.*;
 import uet.oop.bomberman.graphics.Sprite;
 
-import javax.swing.plaf.SliderUI;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class BombermanGame extends Application {
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
     private GraphicsContext gc;
     boolean newGame = false;
+    boolean test = false;
+    boolean nextLevel = false, loadSavedGame = false;
+    boolean permaLevel = true;
     int currentBomberX = 1, currentBomberY = 1;
     int frame = 0, currentBomb = 0;
     boolean mute = true;
     public List<Enemy> balloon = new ArrayList<>();
-    List<Entity> bombs = new ArrayList<>();
+    public List<Enemy> minvo = new ArrayList<>();
+    public List<Enemy> oneal = new ArrayList<>();
+    public List<Enemy> kondoria = new ArrayList<>();
+    public List<Enemy> doll = new ArrayList<>();
     Bomber bomberman;
-    Enemy oneal, minvo, kondoria, doll;
-    Map board = new Map();
-    List<Entity> stillObjects = board.createMap();
-    char[][] map = board.getMap();
+    public List<Entity> stillObjects = new ArrayList<>();
+    List<Entity> bombs = new ArrayList<>();
+    Map board = new Map("src/main/resources/levels/Level1.txt");
+    char[][] map = board.map;
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -48,6 +49,7 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        Sound.backgroundMusic.play();
         FXMLLoader loader = new FXMLLoader(BombermanGame.class.getResource("/uet/oop/bomberman/bomberman.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
@@ -62,8 +64,8 @@ public class BombermanGame extends Application {
     @FXML
     public void quit() {
         System.out.println("quit");
-        saveMap();
-        board.saveGameMap(map);
+        //saveMap();
+
         Platform.exit();
     }
 
@@ -75,8 +77,7 @@ public class BombermanGame extends Application {
 
     @FXML
     public void loadSavedGame() {
-        map = board.loadSavedMap();
-        
+        loadSavedGame = true;
     }
     public void game() {
         Stage stage = new Stage();
@@ -89,12 +90,18 @@ public class BombermanGame extends Application {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-
-        init();
-
+        if(loadSavedGame) {
+            map = board.loadSavedMap();
+            loadSavedEnemy();
+            bomberman = new Bomber(2,1,Sprite.player_right_2.getFxImage());
+            stillObjects = board.createMap(map);
+            bomberman = board.loadBombermanFromTxt();
+            loadSavedGame = false;
+        }else {
+            init();
+        }
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if (key.getCode() == KeyCode.W && bomberman.frame == 0) {
-                System.out.println('W');
                 if (bomberman.canMove(stillObjects, bomberman.xPos, bomberman.yPos - 1)) {
                     bomberman.yPos -= 1;
                     bomberman.up();
@@ -136,11 +143,15 @@ public class BombermanGame extends Application {
                     stage.close();
                 } else if (sceneController.status.equals("new-game")) {
                     newGame = true;
-                    init();
                     sceneController.status = "";
                 }
-                render();
+                if(permaLevel) getNextLevel();
                 update();
+                render();
+                board.saveGame(map);
+                board.saveMovingEntity(balloon,oneal,minvo,kondoria,doll,bomberman);
+
+                //if(!test) test();
             }
         };
 
@@ -151,52 +162,77 @@ public class BombermanGame extends Application {
     public void update() {
         frame++;
         bomberman.checkInItem(stillObjects);
+        if(bomberman.portal && nextLevel) {
+            nextLevel();
+            nextLevel = false;
+            permaLevel = false;
+        }
         bomberman.update();
         //balloon
-        for (Enemy enemy : balloon) {
-            if (enemy.getAlive()) {
-                enemy.enemyMovement(stillObjects, map);
-                if (enemy.touchBomber(bomberman.xPos, bomberman.yPos)) {
+        for (Enemy balloon : balloon) {
+            if (balloon.getAlive()) {
+                balloon.enemyMovement(stillObjects, map);
+                if (balloon.touchBomber(bomberman.xPos, bomberman.yPos)) {
                     bomberman.setAlive(false);
                 }
             }
         }
 
         //oneal
-        if (oneal.getAlive()) {
-            if (frame == 400) {
-                currentBomberX = bomberman.xPos;
-                currentBomberY = bomberman.yPos;
-                frame = 0;
-                ((Oneal) oneal).locChange = true;
+        for (Enemy oneal : oneal) {
+            if (oneal.getAlive()) {
+                if (frame == 400) {
+                    currentBomberX = bomberman.xPos;
+                    currentBomberY = bomberman.yPos;
+                    frame = 0;
+                    ((Oneal) oneal).locChange = true;
+                }
+                oneal.complexEnemyMovement(stillObjects, map, currentBomberX, currentBomberY);
+                if (oneal.touchBomber(bomberman.xPos, bomberman.yPos)) {
+                    bomberman.setAlive(false);
+                }
+                ((Oneal) oneal).locChange = false;
             }
-            oneal.complexEnemyMovement(stillObjects, map, currentBomberX, currentBomberY);
-            ((Oneal) oneal).locChange = false;
         }
         //minvo
-        if (minvo.getAlive()) {
-            minvo.complexEnemyMovement(stillObjects, map, bomberman.xPos, bomberman.yPos);
+        for (Enemy minvo : minvo) {
+            if (minvo.getAlive()) {
+                minvo.complexEnemyMovement(stillObjects, map, bomberman.xPos, bomberman.yPos);
+                if (minvo.touchBomber(bomberman.xPos, bomberman.yPos)) {
+                    bomberman.setAlive(false);
+                }
+            }
         }
         //kondoria
-        if (kondoria.getAlive()) {
-            kondoria.update();
-            kondoria.enemyMovement(stillObjects, map);
-            if (((Kondoria) kondoria).isSkillReady()) {
-                Enemy s = (((Kondoria) kondoria).spawnBalloon(stillObjects));
-                if (s != null) {
-                    balloon.add(s);
+        for (Enemy kondoria : kondoria) {
+            if (kondoria.getAlive()) {
+                kondoria.update();
+                kondoria.enemyMovement(stillObjects, map);
+                if (kondoria.touchBomber(bomberman.xPos, bomberman.yPos)) {
+                    bomberman.setAlive(false);
                 }
-                ((Kondoria) kondoria).setSkillReady(false);
+                if (((Kondoria) kondoria).isSkillReady()) {
+                    Enemy s = (((Kondoria) kondoria).spawnBalloon(stillObjects));
+                    if (s != null) {
+                        balloon.add(s);
+                    }
+                    ((Kondoria) kondoria).setSkillReady(false);
+                }
             }
         }
         //doll
-        if (doll.getAlive()) {
-            doll.update();
-            if (((Doll) doll).isSkillReady()) {
-                ((Doll) doll).teleport(stillObjects, bomberman.xPos, bomberman.yPos);
-                ((Doll) doll).setSkillReady(false);
+        for (Enemy doll : doll) {
+            if (doll.getAlive()) {
+                doll.update();
+                if (((Doll) doll).isSkillReady()) {
+                    ((Doll) doll).teleport(stillObjects, bomberman.xPos, bomberman.yPos);
+                    ((Doll) doll).setSkillReady(false);
+                }
+                doll.enemyMovement(stillObjects, map);
+                if (doll.touchBomber(bomberman.xPos, bomberman.yPos)) {
+                    bomberman.setAlive(false);
+                }
             }
-            doll.enemyMovement(stillObjects, map);
         }
 
         //}
@@ -213,10 +249,14 @@ public class BombermanGame extends Application {
                 enemy.render(gc);
             }
         }
-        if (oneal.getAlive()) oneal.render(gc);
-        if (kondoria.getAlive()) kondoria.render(gc);
-        if (doll.getAlive()) doll.render(gc);
-        if (minvo.getAlive()) minvo.render(gc);
+        for (Enemy oneal : oneal)
+            if (oneal.getAlive()) oneal.render(gc);
+        for (Enemy kondoria : kondoria)
+            if (kondoria.getAlive()) kondoria.render(gc);
+        for (Enemy doll : doll)
+            if (doll.getAlive()) doll.render(gc);
+        for (Enemy minvo : minvo)
+            if (minvo.getAlive()) minvo.render(gc);
         if (bomberman.isAlive()) bomberman.render(gc);
 
 
@@ -240,28 +280,22 @@ public class BombermanGame extends Application {
 
 
     public void init() {
-        newGame = false;
-        bomberman = null;
-        balloon.removeAll(balloon);
-        oneal = null;
-        minvo = null;
-        kondoria = null;
-        doll = null;
-
-        bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        balloon.add(new Balloon(13, 1, Sprite.balloom_left1.getFxImage()));
-        balloon.add(new Balloon(18, 3, Sprite.balloom_left1.getFxImage()));
-        balloon.add(new Balloon(24, 5, Sprite.balloom_left1.getFxImage()));
-        oneal = new Oneal(25, 5, Sprite.oneal_right1.getFxImage());
-        minvo = new Minvo(1, 3, Sprite.minvo_right2.getFxImage());
-        kondoria = new Kondoria(1, 4, Sprite.kondoria_right1.getFxImage());
-        doll = new Doll(2, 1, Sprite.doll_left1.getFxImage());
+        map = board.map;
+        stillObjects = board.createMap(map);
+        minvo = board.getMinvo();
+        balloon = board.getBalloon();
+        doll = board.getDoll();
+        kondoria = board.getKondoria();
+        oneal = board.getOneal();
+        bomberman = board.getBomberman();
     }
 
     public void checkExplosion() {
         if (!bombs.isEmpty()) {
+
             for (Entity bomb : bombs) {
                 if (((Bomb) bomb).getExplode()) {
+                    map = ((Bomb) bomb).getReturnedMap();
                     if (bomberman.getEnhancedFlame()) {
                         //balloon
                         for (Enemy enemy : balloon) {
@@ -276,19 +310,32 @@ public class BombermanGame extends Application {
                             Sound.bomber_die.play();
                         }
                         //minvo
-                        if (((Bomb) bomb).enhancedBombTouched(minvo.xPos, minvo.yPos)) {
-                            minvo.setAlive(false);
-                            Sound.enemyDie.play();
+                        for (Enemy minvo : minvo) {
+                            if (((Bomb) bomb).enhancedBombTouched(minvo.xPos, minvo.yPos)) {
+                                minvo.setAlive(false);
+                                Sound.enemyDie.play();
+                            }
                         }
                         //Kondoria
-                        if (((Bomb) bomb).enhancedBombTouched(kondoria.xPos, kondoria.yPos)) {
-                            kondoria.setAlive(false);
-                            Sound.enemyDie.play();
+                        for (Enemy kondoria : kondoria) {
+                            if (((Bomb) bomb).enhancedBombTouched(kondoria.xPos, kondoria.yPos)) {
+                                kondoria.setAlive(false);
+                                Sound.enemyDie.play();
+                            }
                         }
                         //Doll
-                        if (((Bomb) bomb).enhancedBombTouched(doll.xPos, doll.yPos)) {
-                            doll.setAlive(false);
-                            Sound.enemyDie.play();
+                        for (Enemy doll : doll) {
+                            if (((Bomb) bomb).enhancedBombTouched(doll.xPos, doll.yPos)) {
+                                doll.setAlive(false);
+                                Sound.enemyDie.play();
+                            }
+                        }
+                        //Oneal
+                        for (Enemy oneal : oneal) {
+                            if (((Bomb) bomb).enhancedBombTouched(oneal.xPos, oneal.yPos)) {
+                                oneal.setAlive(false);
+                                Sound.enemyDie.play();
+                            }
                         }
                     } else {
                         for (Enemy enemy : balloon) {
@@ -303,19 +350,32 @@ public class BombermanGame extends Application {
                             Sound.bomber_die.play();
                         }
                         //minvo
-                        if (((Bomb) bomb).bombTouched(minvo.xPos, minvo.yPos)) {
-                            minvo.setAlive(false);
-                            Sound.enemyDie.play();
+                        for (Enemy minvo : minvo) {
+                            if (((Bomb) bomb).bombTouched(minvo.xPos, minvo.yPos)) {
+                                minvo.setAlive(false);
+                                Sound.enemyDie.play();
+                            }
                         }
                         //Kondoria
-                        if (((Bomb) bomb).bombTouched(kondoria.xPos, kondoria.yPos)) {
-                            kondoria.setAlive(false);
-                            Sound.enemyDie.play();
+                        for (Enemy kondoria : kondoria) {
+                            if (((Bomb) bomb).bombTouched(kondoria.xPos, kondoria.yPos)) {
+                                kondoria.setAlive(false);
+                                Sound.enemyDie.play();
+                            }
                         }
                         //Doll
-                        if (((Bomb) bomb).bombTouched(doll.xPos, doll.yPos)) {
-                            doll.setAlive(false);
-                            Sound.enemyDie.play();
+                        for (Enemy doll : doll) {
+                            if (((Bomb) bomb).bombTouched(doll.xPos, doll.yPos)) {
+                                doll.setAlive(false);
+                                Sound.enemyDie.play();
+                            }
+                        }
+                        //Oneal
+                        for (Enemy oneal : oneal) {
+                            if (((Bomb) bomb).bombTouched(oneal.xPos, oneal.yPos)) {
+                                oneal.setAlive(false);
+                                Sound.enemyDie.play();
+                            }
                         }
                     }
 
@@ -324,31 +384,52 @@ public class BombermanGame extends Application {
         }
     }
 
-    public int getEntityPosInArray(int x, int y) {
-        return y * 31 + x;
-    }
-
-    public void saveMap() {
-        map[bomberman.yPos][bomberman.xPos] = 'p';
+    public void getNextLevel() {
         for (Enemy balloon : balloon) {
-            map[balloon.yPos][balloon.xPos] = '1';
-        }
-        map[oneal.yPos][oneal.yPos] = '2';
-    }
-
-    public void loadCharacter() {
-        for (int i = 0; i < 13; i++) {
-            for (int j = 0; j < 31; j++) {
-                if(map[i][j] == 'p') {
-                    bomberman = new Bomber(j,i, Sprite.player_right_1.getFxImage());
-                }
-                if(map[i][j] == '1') {
-                    balloon.add(new Balloon(j,i,Sprite.balloom_right1.getFxImage()));
-                }
-                if(map[i][j] == '2') {
-                    oneal = new Oneal(j,i,Sprite.oneal_right1.getFxImage());
-                }
+            if(balloon.getAlive()) {
+                return;
             }
+        }
+        for (Enemy oneal : oneal) {
+            if(oneal.getAlive()) {
+                return;
+            }
+        }
+        nextLevel = true;
+    }
+    public void nextLevel() {
+        Map level2 = new Map("src/main/resources/levels/Level2.txt");
+        map = level2.map;
+        stillObjects =  level2.createMap(level2.map);
+        bomberman = level2.getBomberman();
+        kondoria = level2.getKondoria();
+        doll = level2.getDoll();
+        minvo = level2.getMinvo();
+    }
+    public void test() {
+        for (Enemy enemy : balloon) {
+            enemy.setAlive(false);
+        }
+
+        //oneal
+        for (Enemy oneal : oneal) {
+            oneal.setAlive(false);
+        }
+        test = true;
+    }
+    public void loadSavedEnemy() {
+        Enemy balloon1 = new Balloon(1,1,Sprite.player_up_2.getFxImage());
+        Enemy doll1 = new Doll(1,1,Sprite.oneal_right1.getFxImage());
+        Enemy kondoria1 = new Kondoria(1,1,Sprite.player_up_2.getFxImage());
+        Enemy minvo1 = new Minvo(1,1,Sprite.player_left_2.getFxImage());
+        Enemy oneal1 = new Oneal(1,1,Sprite.oneal_dead.getFxImage());
+        balloon = board.loadEnemyFromTxt("src/main/resources/game_progress/balloon.txt",balloon1);
+        oneal = board.loadEnemyFromTxt("src/main/resources/game_progress/oneal.txt",oneal1);
+        if(nextLevel) {
+            doll = board.loadEnemyFromTxt("src/main/resources/game_progress/balloon.txt", doll1);
+            kondoria = board.loadEnemyFromTxt("src/main/resources/game_progress/kondoria.txt", kondoria1);
+            minvo = board.loadEnemyFromTxt("src/main/resources/game_progress/minvo.txt", minvo1);
+            bomberman = new Bomber(1, 1, Sprite.player_right_2.getFxImage());
         }
     }
 }

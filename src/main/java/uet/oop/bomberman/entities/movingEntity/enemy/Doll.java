@@ -32,7 +32,7 @@ public class Doll extends Enemy {
         if(frame == 0) {
             counter++;
         }
-        if(counter == 10) {
+        if(counter == 20) {
             skillReady = true;
             counter = 0;
         }

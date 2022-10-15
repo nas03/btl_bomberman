@@ -12,7 +12,7 @@ public class Bomb extends Entity {
     public boolean flag = true;
     private boolean explode = false;
     private boolean explode1 = false;
-
+    private char[][] returnedMap = new char[13][31];
     public boolean isStartExplode() {
         return startExplode;
     }
@@ -35,7 +35,9 @@ public class Bomb extends Entity {
         startExplode = false;
         explode1 = false;
     }
-
+    public char[][] getReturnedMap() {
+        return returnedMap;
+    }
     public boolean bombTouched(int xPos, int yPos) {
 
         if (xPos == x / 32 && yPos == y / 32) {
@@ -63,7 +65,7 @@ public class Bomb extends Entity {
 
     public void bombExplosion(GraphicsContext gc, char[][] map, List<Entity> stillObjects) {
         bombFrame++;
-
+        returnedMap = map;
         if (bombFrame < 100) {
             gc.drawImage(Sprite.bomb.getFxImage(), x, y);
         } else if (bombFrame < 150) {
@@ -160,8 +162,10 @@ public class Bomb extends Entity {
                 else {
                     stillObjects.add(destroyBrick_down, new Grass(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE + 1, Sprite.grass.getFxImage()));
                     map[y / Sprite.SCALED_SIZE + 1][x / Sprite.SCALED_SIZE] = ' ';
+
                 }
             }
+
         } else if (bombFrame > 160) {
             resetBomb();
             flag = false;
@@ -375,7 +379,7 @@ public class Bomb extends Entity {
                 }
             }
             //enhanceExplosion
-
+            returnedMap = map;
 
         } else if (bombFrame > 250) {
             resetBomb();
