@@ -23,28 +23,15 @@ public class Map {
 
     public List<Entity> stillObjects = new ArrayList<>();
     public char[][] map = new char[13][31];
-    /* public int mapIndex = 0;
-     public String MAP = "################################p     ** *  1 * 2 *  * * *   ## # # #*# # #*#*# # # #*#*#*# ##  x*     ***  *  1   * 2 * * ## # # # # #*# # #*#*# # # # #*##f         x **  *  *   1     ## # # # # # # # # #*# #*# # # ##*  *      *  *      *        ## # # # #*# # # #*#*# # # # # ##*    **  *       *           ## #*# # # # # # #*# # # # # # ##           *   *  *          ################################";
-     public char[] mapArray = MAP.toCharArray();
 
-     public Map() {
-         for (int i = 0; i < 13; i++) {
-             for (int j = 0; j < 31; j++) {
-                 map[i][j] = mapArray[mapIndex++];
-             }
-         }
-     }*/
     public BufferedImage img;
     public GraphicsContext gc;
     public char[] mapArray;
     int mapIndex = 0;
     public String MAP = "";
-    public void getMapString() throws  FileNotFoundException, URISyntaxException {
+    public void getMapString(String path) throws  FileNotFoundException, URISyntaxException {
         MAP = "";
-        URL res = Map.class.getClassLoader().getResource("levels/Level1.txt");
-        File file = Paths.get(res.toURI()).toFile();
-        String absolutePath = file.getAbsolutePath();
-        Scanner scan = new Scanner(new BufferedReader(new FileReader(absolutePath)));
+        Scanner scan = new Scanner(new BufferedReader(new FileReader(path)));
         while(scan.hasNext()) {
             MAP += scan.nextLine();
         }
@@ -56,7 +43,7 @@ public class Map {
     }
     public Map() {
         try {
-            getMapString();
+            getMapString("src/main/resources/levels/Level1.txt");
             mapArray = MAP.toCharArray();
             for (int i = 0; i < 13; i++) {
                 for (int j = 0; j < 31; j++) {
@@ -68,40 +55,42 @@ public class Map {
         }
 
     }
-    public static void main(String[] args) throws URISyntaxException {
-        URL res = Map.class.getClassLoader().getResource("game_progress/game.txt");
-        File file = Paths.get(res.toURI()).toFile();
-        String absolutePath = file.getAbsolutePath();
-        System.out.println(absolutePath);
-        /*out.flush();
-        out.write("hello");
-        out.close();*/
+
+    public void saveGameMap(char[][] map) {
+        try {
+            FileWriter out = new FileWriter("src/main/resources/game_progress/game.txt");
+            for (int i = 0; i < 13; i++) {
+                for (int j = 0; j < 31; j++) {
+                    out.write(map[i][j]);
+                }
+            }
+            out.close();
+        }
+        catch (Exception e) {
+            System.out.println("Cant load game.txt");
+        }
+    }
+    public char[][] loadSavedMap() {
+        try {
+           getMapString("src/main/resources/game_progress/game.txt");
+           mapIndex = 0;
+            mapArray = MAP.toCharArray();
+            for (int i = 0; i < 13; i++) {
+                for (int j = 0; j < 31; j++) {
+                    map[i][j] = mapArray[mapIndex++];
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("cant load game progress file");
+        }
+        return map;
+    }
+    public static void main(String[] args) throws URISyntaxException, IOException {
+
     }
     //public void getMap()...
 
-    /*public void loadGame() {
-        try {
-            InputStream inputStream = getClass().getResourceAsStream("/SaveGame/saveFile.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            MovingEntity.xPos = Integer.parseInt(reader.readLine());// .readLine : read a line of text.
-            MovingEntity.yPos = Integer.parseInt(reader.readLine());
-
-            reader.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Bomber bomber = new Bomber(MovingEntity.xPos, MovingEntity.yPos, Sprite.player_right.getFxImage());
-    }*/
-
-  public void saveGame(char[][] map) throws IOException {
-      FileWriter out = new FileWriter(String.valueOf(Map.class.getResource("game_progress/game.txt")));
-      out.flush();
-      out.write("hello");
-  }
     public char[][] getMap() {
         return map;
     }

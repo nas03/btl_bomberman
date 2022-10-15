@@ -62,14 +62,22 @@ public class BombermanGame extends Application {
     @FXML
     public void quit() {
         System.out.println("quit");
+        saveMap();
+        board.saveGameMap(map);
         Platform.exit();
     }
+
     @FXML
     public void playGame() {
         System.out.println("playGame");
         game();
     }
 
+    @FXML
+    public void loadSavedGame() {
+        map = board.loadSavedMap();
+        
+    }
     public void game() {
         Stage stage = new Stage();
 
@@ -252,7 +260,7 @@ public class BombermanGame extends Application {
 
     public void checkExplosion() {
         if (!bombs.isEmpty()) {
-            for(Entity bomb : bombs) {
+            for (Entity bomb : bombs) {
                 if (((Bomb) bomb).getExplode()) {
                     if (bomberman.getEnhancedFlame()) {
                         //balloon
@@ -316,8 +324,31 @@ public class BombermanGame extends Application {
         }
     }
 
-    public void nextLevel() {
-
+    public int getEntityPosInArray(int x, int y) {
+        return y * 31 + x;
     }
 
+    public void saveMap() {
+        map[bomberman.yPos][bomberman.xPos] = 'p';
+        for (Enemy balloon : balloon) {
+            map[balloon.yPos][balloon.xPos] = '1';
+        }
+        map[oneal.yPos][oneal.yPos] = '2';
+    }
+
+    public void loadCharacter() {
+        for (int i = 0; i < 13; i++) {
+            for (int j = 0; j < 31; j++) {
+                if(map[i][j] == 'p') {
+                    bomberman = new Bomber(j,i, Sprite.player_right_1.getFxImage());
+                }
+                if(map[i][j] == '1') {
+                    balloon.add(new Balloon(j,i,Sprite.balloom_right1.getFxImage()));
+                }
+                if(map[i][j] == '2') {
+                    oneal = new Oneal(j,i,Sprite.oneal_right1.getFxImage());
+                }
+            }
+        }
+    }
 }
