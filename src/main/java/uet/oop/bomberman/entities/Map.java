@@ -1,12 +1,10 @@
 package uet.oop.bomberman.entities;
 
 
-import javafx.scene.canvas.GraphicsContext;
-import uet.oop.bomberman.entities.movingEntity.Bomber;
-import uet.oop.bomberman.entities.movingEntity.enemy.*;
+import uet.oop.bomberman.moving_entities.Bomber;
+import uet.oop.bomberman.moving_entities.enemy.*;
 import uet.oop.bomberman.graphics.Sprite;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -17,20 +15,29 @@ import static uet.oop.bomberman.BombermanGame.WIDTH;
 import static uet.oop.bomberman.entities.Entity.HEIGHT;
 
 public class Map {
-    public List<Enemy> balloon = new ArrayList<>();
-    public List<Enemy> minvo = new ArrayList<>();
-    public List<Enemy> oneal = new ArrayList<>();
-    public List<Enemy> kondoria = new ArrayList<>();
-    public List<Enemy> doll = new ArrayList<>();
-    public Bomber bomberman = new Bomber(1,1,Sprite.player_right.getFxImage());
-    public List<Entity> stillObjects = new ArrayList<>();
-    public char[][] map = new char[13][31];
-
-    public BufferedImage img;
-    public GraphicsContext gc;
-    public char[] mapArray;
+    private List<Enemy> balloon = new ArrayList<>();
+    private List<Enemy> minvo = new ArrayList<>();
+    private List<Enemy> oneal = new ArrayList<>();
+    private List<Enemy> kondoria = new ArrayList<>();
+    private List<Enemy> doll = new ArrayList<>();
+    private Bomber bomberman = new Bomber(1,1,Sprite.player_right.getFxImage());
+    private List<Entity> stillObjects = new ArrayList<>();
+    private char[][] map = new char[13][31];
+    private int level = 1;
+    char[] mapArray;
     int mapIndex = 0;
     public String MAP = "";
+
+    public List<Entity> getStillObjects() {
+        return stillObjects;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+    public void setLevel(int level) {
+        this.level = level;
+    }
     public void getMapString(String path) throws  FileNotFoundException, URISyntaxException {
         MAP = "";
         Scanner scan = new Scanner(new BufferedReader(new FileReader(path)));
@@ -42,6 +49,24 @@ public class Map {
             throw  new FileNotFoundException();
         }
 
+    }
+    public char[][] getMap() {
+        try {
+            mapIndex = 0;
+            if(level == 1)
+                getMapString("src/main/resources/levels/Level1.txt");
+            else
+                getMapString("src/main/resources/levels/Level2.txt");
+            mapArray = MAP.toCharArray();
+            for (int i = 0; i < 13; i++) {
+                for (int j = 0; j < 31; j++) {
+                    map[i][j] = mapArray[mapIndex++];
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("cant construct map array");
+        }
+        return map;
     }
     public Map(String path) {
         try {
@@ -56,7 +81,6 @@ public class Map {
         } catch (Exception e) {
             System.out.println("cant construct map array");
         }
-
     }
 
     public void saveGame(char[][] map) {
@@ -270,32 +294,6 @@ public class Map {
             }
         }
         return bomberman;
-    }
-    public static void main(String[] args) {
-        Enemy type  = new Balloon(1,1,Sprite.balloom_left3.getFxImage());
-        List<Enemy> enemies = new ArrayList<>();
-        try {
-            Scanner in = new Scanner(new BufferedReader(new FileReader("src/main/resources/game_progress/balloon.txt")));
-            while (in.hasNext()) {
-                String s = in.nextLine();
-                String[] splitter = s.split(" ");
-                int a = Integer.parseInt(splitter[0]);
-                int b = Integer.parseInt(splitter[1]);
-                if(type instanceof Balloon) {
-                    enemies.add(new Balloon(a,b,Sprite.balloom_right1.getFxImage()));
-                } else if(type instanceof Doll) {
-                    enemies.add(new Doll(a,b, Sprite.doll_right1.getFxImage()));
-                } else if(type instanceof Oneal) {
-                    enemies.add(new Oneal(a,b,Sprite.oneal_right1.getFxImage()));
-                } else if(type instanceof Kondoria) {
-                    enemies.add(new Kondoria(a,b,Sprite.kondoria_right1.getFxImage()));
-                } else  {
-                    enemies.add(new Minvo(a,b,Sprite.minvo_right1.getFxImage()));
-                }
-            }
-        } catch(Exception e ) {
-            System.out.println("Cant load data from resources");
-        }
     }
 
 }
