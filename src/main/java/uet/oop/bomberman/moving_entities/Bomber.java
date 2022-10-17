@@ -1,23 +1,23 @@
-package uet.oop.bomberman.entities.movingEntity;
+package uet.oop.bomberman.moving_entities;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.entities.movingEntity.enemy.Enemy;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
 
 
 public class Bomber extends MovingEntity {
-
     public int frame = 0;
-    public boolean ableToMove = true;
     private boolean enhancedFlame = false;
     private int speed = 1;
     public int bombLimit = 1;
-    public boolean portal = false;
+    private boolean portal = false;
 
+    public boolean isPortal() {
+        return portal;
+    }
     public void setEnhancedFlame(boolean enhancedFlame) {
         this.enhancedFlame = enhancedFlame;
     }

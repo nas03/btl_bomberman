@@ -13,9 +13,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.entities.movingEntity.Bomber;
-import uet.oop.bomberman.entities.movingEntity.enemy.*;
+import uet.oop.bomberman.moving_entities.Bomber;
+import uet.oop.bomberman.moving_entities.enemy.*;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.ultilities.Sound;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class BombermanGame extends Application {
     public List<Entity> stillObjects = new ArrayList<>();
     List<Entity> bombs = new ArrayList<>();
     Map board = new Map("src/main/resources/levels/Level1.txt");
-    char[][] map = board.map;
+    char[][] map = board.getMap();
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -90,16 +91,17 @@ public class BombermanGame extends Application {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+        stage.setTitle("Bomberman-ver1.0");
+
         if(loadSavedGame) {
             map = board.loadSavedMap();
             loadSavedEnemy();
-            bomberman = new Bomber(2,1,Sprite.player_right_2.getFxImage());
+            bomberman = new Bomber(2,1,Sprite.player_right_1.getFxImage());
             stillObjects = board.createMap(map);
             bomberman = board.loadBombermanFromTxt();
             loadSavedGame = false;
-        }else {
-            init();
-        }
+        }else init();
+
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if (key.getCode() == KeyCode.W && bomberman.frame == 0) {
                 if (bomberman.canMove(stillObjects, bomberman.xPos, bomberman.yPos - 1)) {
@@ -162,7 +164,7 @@ public class BombermanGame extends Application {
     public void update() {
         frame++;
         bomberman.checkInItem(stillObjects);
-        if(bomberman.portal && nextLevel) {
+        if(bomberman.isPortal() && nextLevel) {
             nextLevel();
             nextLevel = false;
             permaLevel = false;
@@ -185,13 +187,13 @@ public class BombermanGame extends Application {
                     currentBomberX = bomberman.xPos;
                     currentBomberY = bomberman.yPos;
                     frame = 0;
-                    ((Oneal) oneal).locChange = true;
+                    ((Oneal) oneal).setLocChange(true);
                 }
                 oneal.complexEnemyMovement(stillObjects, map, currentBomberX, currentBomberY);
                 if (oneal.touchBomber(bomberman.xPos, bomberman.yPos)) {
                     bomberman.setAlive(false);
                 }
-                ((Oneal) oneal).locChange = false;
+                ((Oneal) oneal).setLocChange(false);
             }
         }
         //minvo
@@ -280,7 +282,7 @@ public class BombermanGame extends Application {
 
 
     public void init() {
-        map = board.map;
+        map = board.getMap();
         stillObjects = board.createMap(map);
         minvo = board.getMinvo();
         balloon = board.getBalloon();
@@ -292,10 +294,9 @@ public class BombermanGame extends Application {
 
     public void checkExplosion() {
         if (!bombs.isEmpty()) {
-
             for (Entity bomb : bombs) {
                 if (((Bomb) bomb).getExplode()) {
-                    map = ((Bomb) bomb).getReturnedMap();
+                    //map = ((Bomb) bomb).getReturnedMap();
                     if (bomberman.getEnhancedFlame()) {
                         //balloon
                         for (Enemy enemy : balloon) {
@@ -398,13 +399,14 @@ public class BombermanGame extends Application {
         nextLevel = true;
     }
     public void nextLevel() {
-        Map level2 = new Map("src/main/resources/levels/Level2.txt");
-        map = level2.map;
-        stillObjects =  level2.createMap(level2.map);
-        bomberman = level2.getBomberman();
-        kondoria = level2.getKondoria();
-        doll = level2.getDoll();
-        minvo = level2.getMinvo();
+        board = new Map("src/main/resources/levels/Level2.txt");
+        board.setLevel(2);
+        map = board.getMap();
+        stillObjects =  board.createMap(map);
+        //bomberman = board.getBomberman();
+        kondoria = board.getKondoria();
+        doll = board.getDoll();
+        minvo = board.getMinvo();
     }
     public void test() {
         for (Enemy enemy : balloon) {

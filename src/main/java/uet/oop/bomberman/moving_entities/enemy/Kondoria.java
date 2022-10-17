@@ -1,11 +1,11 @@
-package uet.oop.bomberman.entities.movingEntity.enemy;
+package uet.oop.bomberman.moving_entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Wall;
-import uet.oop.bomberman.entities.movingEntity.enemy.automove.SimpleMovement;
+import uet.oop.bomberman.automove.SimpleMovement;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
@@ -13,9 +13,7 @@ import java.util.Random;
 
 public class Kondoria extends Enemy {
     SimpleMovement movement = new SimpleMovement();
-    public int spellCounter = 0;
-    public int spawnLimit = 2;
-    int spawn = 0;
+    protected int spellCounter = 0;
     private boolean skillReady = false;
     public Kondoria(int x, int y, Image img) {
         super(x, y, img);

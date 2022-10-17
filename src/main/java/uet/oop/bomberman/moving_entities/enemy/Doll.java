@@ -1,11 +1,11 @@
-package uet.oop.bomberman.entities.movingEntity.enemy;
+package uet.oop.bomberman.moving_entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Wall;
-import uet.oop.bomberman.entities.movingEntity.enemy.automove.NormalMovement;
+import uet.oop.bomberman.automove.NormalMovement;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class Doll extends Enemy {
     public Doll(int x, int y, Image img) {
         super(x, y, img);
     }
-    public boolean skillReady = false;
+    protected boolean skillReady = false;
     int counter = 0;
     NormalMovement movement = new NormalMovement();
 

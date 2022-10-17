@@ -1,4 +1,4 @@
-package uet.oop.bomberman.entities.movingEntity.enemy.automove;
+package uet.oop.bomberman.automove;
 
 public class NormalMovement extends AutomaticMovement {
     @Override

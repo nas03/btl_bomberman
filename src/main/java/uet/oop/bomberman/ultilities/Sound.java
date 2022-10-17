@@ -1,12 +1,8 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.ultilities;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
