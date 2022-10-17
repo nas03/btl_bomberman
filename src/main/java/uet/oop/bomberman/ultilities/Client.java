@@ -1,4 +1,4 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.ultilities;
 
 //import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 

@@ -1,14 +1,14 @@
-package uet.oop.bomberman.entities.movingEntity.enemy;
+package uet.oop.bomberman.moving_entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.movingEntity.MovingEntity;
+import uet.oop.bomberman.moving_entities.MovingEntity;
 
 import java.util.List;
 
 public abstract class Enemy extends MovingEntity {
-    public int frame = 0;
+    protected int frame = 0;
     private boolean isAlive = true;
 
     public boolean touchBomber(int bomberX, int bomberY) {
