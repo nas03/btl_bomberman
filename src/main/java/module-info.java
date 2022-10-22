@@ -7,6 +7,7 @@ module uet.oop.bomberman {
     requires java.desktop;
     opens levels;
     opens game_progress;
+    opens uet.oop.bomberman.moving_entities to javafx.graphics;
     opens uet.oop.bomberman to javafx.fxml;
     exports uet.oop.bomberman;
 }
