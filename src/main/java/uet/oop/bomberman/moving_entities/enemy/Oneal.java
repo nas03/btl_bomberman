@@ -25,9 +25,10 @@ public class Oneal extends Enemy {
 
     @Override
     public void render(GraphicsContext gc) {
-        int fast = random.nextInt(2);
+        /*int fast = random.nextInt(2);
         if(fast == 0) speed = 1;
-        else speed = 2;
+        else speed = 2;*/
+        speed = 1;
         if (pressD) {
             renderD(gc);
         } else if (pressA) {
@@ -54,7 +55,6 @@ public class Oneal extends Enemy {
 
     @Override
     public void complexEnemyMovement(List<Entity> stillObjects, char[][] map, int bomberXPos, int bomberYPos) {
-
         if(frame == 0) {
             mapResetFrame++;
             if (mapResetFrame % 25 == 0) {

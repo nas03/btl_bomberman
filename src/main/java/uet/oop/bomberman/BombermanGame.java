@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -27,6 +29,8 @@ public class BombermanGame extends Application {
     public static final int HEIGHT = 13;
     private GraphicsContext gc;
     boolean newGame = false;
+    boolean played = false;
+    boolean gameOver = false;
     boolean test = false;
     boolean nextLevel = false, loadSavedGame = false;
     boolean permaLevel = true;
@@ -43,6 +47,8 @@ public class BombermanGame extends Application {
     List<Entity> bombs = new ArrayList<>();
     Map board = new Map("src/main/resources/levels/Level1.txt");
     char[][] map = board.getMap();
+    Stage parentStage = new Stage();
+    Stage stage = new Stage();
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -59,7 +65,15 @@ public class BombermanGame extends Application {
 
     @FXML
     public void howToPlay() {
-        System.out.println("how to play");
+        Image img = new Image("guide.png");
+        ImageView view = new ImageView();
+        view.setImage(img);
+        VBox root = new VBox(view);
+        Scene scene = new Scene(root, 992, 416);
+        Stage guide = new Stage();
+        guide.setTitle("How To Play");
+        guide.setScene(scene);
+        guide.show();
     }
 
     @FXML
@@ -79,10 +93,24 @@ public class BombermanGame extends Application {
     @FXML
     public void loadSavedGame() {
         loadSavedGame = true;
+        if(played) game();
     }
-    public void game() {
-        Stage stage = new Stage();
+    public void gameOver() {
+        if(gameOver) {
+            stage.close();
+            FXMLLoader loader = new FXMLLoader(BombermanGame.class.getResource("/uet/oop/bomberman/gameOver.fxml"));
+            try {
+                Scene scene = new Scene(loader.load());
+                stage.setScene(scene);
+                stage.show();
+            } catch (Exception e) {
+                System.out.println("Cant load fxml");
+            }
+        }
 
+    }
+
+    public void game() {
         SceneController sceneController = new SceneController();
         VBox root = sceneController.prepare();
         Canvas cv = (Canvas) root.getChildren().get(1);
@@ -100,7 +128,10 @@ public class BombermanGame extends Application {
             stillObjects = board.createMap(map);
             bomberman = board.loadBombermanFromTxt();
             loadSavedGame = false;
-        }else init();
+        }else {
+            played = true;
+            init();
+        }
 
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
             if (key.getCode() == KeyCode.W && bomberman.frame == 0) {
@@ -141,18 +172,22 @@ public class BombermanGame extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                if (sceneController.status.equals("close")) {
+                if(stage.isShowing()) {
+                /*if (sceneController.status.equals("close")) {
                     stage.close();
                 } else if (sceneController.status.equals("new-game")) {
                     newGame = true;
                     sceneController.status = "";
-                }
-                if(permaLevel) getNextLevel();
-                update();
-                render();
-                board.saveGame(map);
-                board.saveMovingEntity(balloon,oneal,minvo,kondoria,doll,bomberman);
+                }*/
+                    {
+                        if (permaLevel) getNextLevel();
 
+                        update();
+                        render();
+                        board.saveGame(map);
+                        board.saveMovingEntity(balloon, oneal, minvo, kondoria, doll, bomberman);
+                    }
+                }
                 //if(!test) test();
             }
         };
@@ -162,6 +197,10 @@ public class BombermanGame extends Application {
 
 
     public void update() {
+        if(!bomberman.isAlive && !gameOver) {
+            gameOver = true;
+            gameOver();
+        }
         frame++;
         bomberman.checkInItem(stillObjects);
         if(bomberman.isPortal() && nextLevel) {
@@ -290,6 +329,7 @@ public class BombermanGame extends Application {
         kondoria = board.getKondoria();
         oneal = board.getOneal();
         bomberman = board.getBomberman();
+        gameOver = false;
     }
 
     public void checkExplosion() {

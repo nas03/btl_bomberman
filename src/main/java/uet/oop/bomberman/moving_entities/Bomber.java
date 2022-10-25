@@ -14,6 +14,7 @@ public class Bomber extends MovingEntity {
     private int speed = 1;
     public int bombLimit = 1;
     private boolean portal = false;
+    private Image currentSprite = Sprite.player_right.getFxImage();
 
     public boolean isPortal() {
         return portal;
@@ -75,15 +76,19 @@ public class Bomber extends MovingEntity {
     @Override
     public void render(GraphicsContext gc) {
         if (pressA) {
+            currentSprite = Sprite.player_left.getFxImage();
             renderA(gc);
         } else if (pressW) {
+            currentSprite = Sprite.player_up.getFxImage();
             renderW(gc);
         } else if (pressD) {
+            currentSprite = Sprite.player_right.getFxImage();
             renderD(gc);
         } else if (pressS) {
+            currentSprite = Sprite.player_down.getFxImage();
             renderS(gc);
         } else {
-            gc.drawImage(Sprite.player_right.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
+            gc.drawImage(currentSprite, xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
     }
 
