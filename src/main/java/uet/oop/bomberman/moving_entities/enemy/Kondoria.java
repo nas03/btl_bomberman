@@ -45,7 +45,10 @@ public class Kondoria extends Enemy {
             renderW(gc);
         } else if (pressS) {
             renderS(gc);
-        } else {
+        } else if(!getAlive()) {
+            renderDie(gc);
+        }
+        else {
             gc.drawImage(Sprite.kondoria_right1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
     }
@@ -145,6 +148,16 @@ public class Kondoria extends Enemy {
 
     }
 
+    public void renderDie(GraphicsContext gc) {
+        frame++;
+        if(frame < 31) {
+            gc.drawImage(Sprite.kondoria_dead.getFxImage(), xPos* Sprite.SCALED_SIZE, yPos* Sprite.SCALED_SIZE);
+        }
+        if(frame == 30) {
+            frame = 0;
+            delete = true;
+        }
+    }
     public Enemy spawnBalloon(List <Entity> stillObjects) {
        Random random = new Random();
        int randomX = random.nextInt(30) + 1;

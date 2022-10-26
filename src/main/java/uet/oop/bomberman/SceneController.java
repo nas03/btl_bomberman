@@ -7,9 +7,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class SceneController{
+public class SceneController {
     public String status = "open";
     GraphicsContext gc;
+
     public VBox prepare() {
         Canvas canvas = new Canvas(992, 416);
         //create menu bar
@@ -17,9 +18,9 @@ public class SceneController{
         Menu game = new Menu("Game");
         Menu help = new Menu("Help");
         MenuItem howToPlay = new MenuItem("How To Play?");
-        MenuItem newGame = new MenuItem("New Game");
+        MenuItem saveGame = new MenuItem("Save Game");
         MenuItem quit = new MenuItem("Quit");
-        game.getItems().addAll(newGame, quit);
+        game.getItems().addAll(saveGame, quit);
         help.getItems().add(howToPlay);
         menuBar.getMenus().addAll(game, help);
         howToPlay.setOnAction(event -> {
@@ -40,9 +41,9 @@ public class SceneController{
             System.out.println("quit");
             status = "close";
         });
-        newGame.setOnAction(event -> {
-            System.out.println("new game");
-            status = "new-game";
+        saveGame.setOnAction(event -> {
+            System.out.println("save game");
+            status = "save-game";
         });
         //tao container root
         gc = canvas.getGraphicsContext2D();
@@ -60,7 +61,7 @@ public class SceneController{
         Button quit = new Button("Quit");
         quit.setLayoutX(100);
         quit.setLayoutY(150);
-        gameMenu.getChildren().addAll(playGame,howToPlay,quit);
+        gameMenu.getChildren().addAll(playGame, howToPlay, quit);
         return gameMenu;
     }
 

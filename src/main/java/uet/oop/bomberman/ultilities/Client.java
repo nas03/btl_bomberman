@@ -13,28 +13,28 @@ public class Client extends Thread {
     private static PrintWriter out;
     private static Socket socket;
 
-    public Client(Socket s){
+    public Client(Socket s) {
         socket = s;
     }
 
     public void run() {
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new PrintWriter(socket.getOutputStream(),true);
-        }catch(IOException e) {
+            out = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendToServer(String mess){
+    public void sendToServer(String mess) {
         out.println(mess);
     }
 
     public String giveFromServer() {
         String mess = null;
-        try{
+        try {
             mess = in.readLine();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return mess;

@@ -7,6 +7,7 @@ import uet.oop.bomberman.automove.SimpleMovement;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class Balloon extends Enemy {
 
@@ -36,7 +37,10 @@ public class Balloon extends Enemy {
             renderW(gc);
         } else if (pressS) {
             renderS(gc);
-        } else  {
+        } else if(!getAlive()) {
+            renderDie(gc);
+        }
+        else  {
             gc.drawImage(Sprite.balloom_right1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
     }
@@ -128,5 +132,16 @@ public class Balloon extends Enemy {
             pressW = false;
         }
 
+    }
+
+    public void renderDie(GraphicsContext gc) {
+        frame++;
+        if(frame < 31) {
+            gc.drawImage(Sprite.balloom_dead.getFxImage(), xPos* Sprite.SCALED_SIZE, yPos* Sprite.SCALED_SIZE);
+        }
+        if(frame == 30) {
+            frame = 0;
+            delete = true;
+        }
     }
 }

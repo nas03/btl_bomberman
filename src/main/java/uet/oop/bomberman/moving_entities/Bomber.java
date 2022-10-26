@@ -10,32 +10,34 @@ import java.util.List;
 
 public class Bomber extends MovingEntity {
     public int frame = 0;
+    public int bombLimit = 1;
     private boolean enhancedFlame = false;
     private int speed = 1;
-    public int bombLimit = 1;
     private boolean portal = false;
+    private Image currentSprite = Sprite.player_right.getFxImage();
+
+    public Bomber(int x, int y, Image img) {
+        super(x, y, img);
+    }
 
     public boolean isPortal() {
         return portal;
-    }
-    public void setEnhancedFlame(boolean enhancedFlame) {
-        this.enhancedFlame = enhancedFlame;
     }
 
     public boolean getEnhancedFlame() {
         return enhancedFlame;
     }
 
-    public void setAlive(boolean alive) {
-        isAlive = alive;
+    public void setEnhancedFlame(boolean enhancedFlame) {
+        this.enhancedFlame = enhancedFlame;
     }
 
     public boolean isAlive() {
         return isAlive;
     }
 
-    public Bomber(int x, int y, Image img) {
-        super(x, y, img);
+    public void setAlive(boolean alive) {
+        isAlive = alive;
     }
 
     public void speedUp() {
@@ -45,6 +47,7 @@ public class Bomber extends MovingEntity {
     @Override
     public void update() {
     }
+
     public void checkInItem(List<Entity> stillObjects) {
         int currentLocX = xPos;
         int currentLocY = yPos;
@@ -72,31 +75,36 @@ public class Bomber extends MovingEntity {
         }
 
     }
+
     @Override
     public void render(GraphicsContext gc) {
         if (pressA) {
+            currentSprite = Sprite.player_left.getFxImage();
             renderA(gc);
         } else if (pressW) {
+            currentSprite = Sprite.player_up.getFxImage();
             renderW(gc);
         } else if (pressD) {
+            currentSprite = Sprite.player_right.getFxImage();
             renderD(gc);
         } else if (pressS) {
+            currentSprite = Sprite.player_down.getFxImage();
             renderS(gc);
         } else {
-            gc.drawImage(Sprite.player_right.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
+            gc.drawImage(currentSprite, xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
     }
 
     public void renderA(GraphicsContext gc) {
         frame++;
-        if (frame <= 10/speed) {
-            gc.drawImage(Sprite.player_left.getFxImage(), xPos * Sprite.SCALED_SIZE + 32 - frame*speed, yPos * Sprite.SCALED_SIZE);
-        } else if (frame <= 20/speed) {
-            gc.drawImage(Sprite.player_left_1.getFxImage(), xPos * Sprite.SCALED_SIZE + 32 - frame*speed, yPos * Sprite.SCALED_SIZE);
-        } else if (frame <= 30/speed) {
-            gc.drawImage(Sprite.player_left_2.getFxImage(), xPos * Sprite.SCALED_SIZE + 32 - frame*speed, yPos * Sprite.SCALED_SIZE);
+        if (frame <= 10 / speed) {
+            gc.drawImage(Sprite.player_left.getFxImage(), xPos * Sprite.SCALED_SIZE + 32 - frame * speed, yPos * Sprite.SCALED_SIZE);
+        } else if (frame <= 20 / speed) {
+            gc.drawImage(Sprite.player_left_1.getFxImage(), xPos * Sprite.SCALED_SIZE + 32 - frame * speed, yPos * Sprite.SCALED_SIZE);
+        } else if (frame <= 30 / speed) {
+            gc.drawImage(Sprite.player_left_2.getFxImage(), xPos * Sprite.SCALED_SIZE + 32 - frame * speed, yPos * Sprite.SCALED_SIZE);
         }
-        if (frame == 30/speed) {
+        if (frame == 30 / speed) {
             frame = 0;
             pressA = false;
         }
@@ -105,14 +113,14 @@ public class Bomber extends MovingEntity {
 
     public void renderD(GraphicsContext gc) {
         frame++;
-        if (frame <= 10/speed) {
-            gc.drawImage(Sprite.player_right.getFxImage(), xPos * Sprite.SCALED_SIZE - 32 + frame*speed, yPos * Sprite.SCALED_SIZE);
-        } else if (frame <= 20/speed) {
-            gc.drawImage(Sprite.player_right_1.getFxImage(), xPos * Sprite.SCALED_SIZE - 32 + frame*speed, yPos * Sprite.SCALED_SIZE);
-        } else if (frame <= 30/speed) {
-            gc.drawImage(Sprite.player_right_2.getFxImage(), xPos * Sprite.SCALED_SIZE - 32 + frame*speed, yPos * Sprite.SCALED_SIZE);
+        if (frame <= 10 / speed) {
+            gc.drawImage(Sprite.player_right.getFxImage(), xPos * Sprite.SCALED_SIZE - 32 + frame * speed, yPos * Sprite.SCALED_SIZE);
+        } else if (frame <= 20 / speed) {
+            gc.drawImage(Sprite.player_right_1.getFxImage(), xPos * Sprite.SCALED_SIZE - 32 + frame * speed, yPos * Sprite.SCALED_SIZE);
+        } else if (frame <= 30 / speed) {
+            gc.drawImage(Sprite.player_right_2.getFxImage(), xPos * Sprite.SCALED_SIZE - 32 + frame * speed, yPos * Sprite.SCALED_SIZE);
         }
-        if (frame == 30/speed) {
+        if (frame == 30 / speed) {
             frame = 0;
             pressD = false;
         }
@@ -121,14 +129,14 @@ public class Bomber extends MovingEntity {
 
     public void renderS(GraphicsContext gc) {
         frame++;
-        if (frame <= 10/speed) {
-            gc.drawImage(Sprite.player_down.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE - 32 + frame*speed);
-        } else if (frame <= 20/speed) {
-            gc.drawImage(Sprite.player_down_1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE - 32 + frame*speed);
-        } else if (frame <= 30/speed) {
-            gc.drawImage(Sprite.player_down_2.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE - 32 + frame*speed);
+        if (frame <= 10 / speed) {
+            gc.drawImage(Sprite.player_down.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE - 32 + frame * speed);
+        } else if (frame <= 20 / speed) {
+            gc.drawImage(Sprite.player_down_1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE - 32 + frame * speed);
+        } else if (frame <= 30 / speed) {
+            gc.drawImage(Sprite.player_down_2.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE - 32 + frame * speed);
         }
-        if (frame == 30/speed) {
+        if (frame == 30 / speed) {
             frame = 0;
             pressS = false;
         }
@@ -137,14 +145,14 @@ public class Bomber extends MovingEntity {
 
     public void renderW(GraphicsContext gc) {
         frame++;
-        if (frame <= 10/speed) {
-            gc.drawImage(Sprite.player_up.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE + 32 - frame*speed);
-        } else if (frame <= 20/speed) {
-            gc.drawImage(Sprite.player_up_1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE + 32 - frame*speed);
-        } else if (frame <= 30/speed) {
-            gc.drawImage(Sprite.player_up_2.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE + 32 - frame*speed);
+        if (frame <= 10 / speed) {
+            gc.drawImage(Sprite.player_up.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE + 32 - frame * speed);
+        } else if (frame <= 20 / speed) {
+            gc.drawImage(Sprite.player_up_1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE + 32 - frame * speed);
+        } else if (frame <= 30 / speed) {
+            gc.drawImage(Sprite.player_up_2.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE + 32 - frame * speed);
         }
-        if (frame == 30/speed) {
+        if (frame == 30 / speed) {
             frame = 0;
             pressW = false;
         }
@@ -154,7 +162,6 @@ public class Bomber extends MovingEntity {
     public int getEntityPosInArray(int x, int y) {
         return y * 31 + x;
     }
-
 
 
 }
