@@ -2,8 +2,8 @@ package uet.oop.bomberman.moving_entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import uet.oop.bomberman.automove.NormalMovement;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.automove.NormalMovement;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
@@ -30,9 +30,10 @@ public class Minvo extends Enemy {
             renderD(gc);
         } else if (pressW) {
             renderW(gc);
-        } else if (!getAlive()) {
+        } else if(!getAlive()) {
             renderDie(gc);
-        } else {
+        }
+        else  {
             gc.drawImage(Sprite.minvo_right1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
     }
@@ -44,7 +45,7 @@ public class Minvo extends Enemy {
 
     @Override
     public void complexEnemyMovement(List<Entity> stillObjects, char[][] map, int bomberXPos, int bomberYPos) {
-        if (frame == 0) {
+        if(frame == 0) {
             int direction = movement.intTypeComplexMovement(map, xPos, yPos, bomberXPos, bomberYPos);
             if (direction == 0 && canMove(stillObjects, xPos - 1, yPos)) {
                 xPos -= 1;
@@ -129,10 +130,10 @@ public class Minvo extends Enemy {
 
     public void renderDie(GraphicsContext gc) {
         frame++;
-        if (frame < 21) {
-            gc.drawImage(Sprite.minvo_dead.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
+        if(frame < 31) {
+            gc.drawImage(Sprite.minvo_dead.getFxImage(), xPos* Sprite.SCALED_SIZE, yPos* Sprite.SCALED_SIZE);
         }
-        if (frame == 20) {
+        if(frame == 30) {
             frame = 0;
             delete = true;
         }

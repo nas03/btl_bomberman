@@ -2,20 +2,19 @@ package uet.oop.bomberman.moving_entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import uet.oop.bomberman.automove.SimpleMovement;
 import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Wall;
+import uet.oop.bomberman.automove.SimpleMovement;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
 import java.util.Random;
 
 public class Kondoria extends Enemy {
-    protected int spellCounter = 0;
     SimpleMovement movement = new SimpleMovement();
+    protected int spellCounter = 0;
     private boolean skillReady = false;
-
     public Kondoria(int x, int y, Image img) {
         super(x, y, img);
     }
@@ -30,7 +29,7 @@ public class Kondoria extends Enemy {
 
     @Override
     public void update() {
-        if (spellCounter == 30) {
+        if(spellCounter == 30){
             skillReady = true;
             spellCounter = 0;
         }
@@ -46,9 +45,10 @@ public class Kondoria extends Enemy {
             renderW(gc);
         } else if (pressS) {
             renderS(gc);
-        } else if (!getAlive()) {
+        } else if(!getAlive()) {
             renderDie(gc);
-        } else {
+        }
+        else {
             gc.drawImage(Sprite.kondoria_right1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
     }
@@ -150,22 +150,21 @@ public class Kondoria extends Enemy {
 
     public void renderDie(GraphicsContext gc) {
         frame++;
-        if (frame < 21) {
-            gc.drawImage(Sprite.kondoria_dead.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
+        if(frame < 31) {
+            gc.drawImage(Sprite.kondoria_dead.getFxImage(), xPos* Sprite.SCALED_SIZE, yPos* Sprite.SCALED_SIZE);
         }
-        if (frame == 20) {
+        if(frame == 30) {
             frame = 0;
             delete = true;
         }
     }
-
-    public Enemy spawnBalloon(List<Entity> stillObjects) {
-        Random random = new Random();
-        int randomX = random.nextInt(30) + 1;
-        int randomY = random.nextInt(12) + 1;
-        if (!(stillObjects.get(randomY * 31 + randomX) instanceof Brick || stillObjects.get(randomY * 31 + randomX) instanceof Wall)) {
-            return new Balloon(randomX, randomY, Sprite.balloom_right1.getFxImage());
-        }
-        return null;
+    public Enemy spawnBalloon(List <Entity> stillObjects) {
+       Random random = new Random();
+       int randomX = random.nextInt(30) + 1;
+       int randomY = random.nextInt(12) + 1;
+       if(!(stillObjects.get(randomY*31 + randomX) instanceof Brick || stillObjects.get(randomY*31 + randomX) instanceof Wall)) {
+               return new Balloon(randomX, randomY, Sprite.balloom_right1.getFxImage());
+       }
+       return null;
     }
 }
