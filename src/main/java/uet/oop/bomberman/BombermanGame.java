@@ -14,10 +14,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.Bomb;
+import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.Map;
+import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.moving_entities.Bomber;
 import uet.oop.bomberman.moving_entities.enemy.*;
-import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.ultilities.Sound;
 
 import java.io.IOException;
@@ -27,7 +29,12 @@ import java.util.List;
 public class BombermanGame extends Application {
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
-    private GraphicsContext gc;
+    public List<Enemy> balloons = new ArrayList<>();
+    public List<Enemy> minvos = new ArrayList<>();
+    public List<Enemy> oneals = new ArrayList<>();
+    public List<Enemy> kondorias = new ArrayList<>();
+    public List<Enemy> dolls = new ArrayList<>();
+    public List<Entity> stillObjects = new ArrayList<>();
     boolean newGame = false;
     boolean played = false;
     boolean gameOver = false;
@@ -37,18 +44,13 @@ public class BombermanGame extends Application {
     int currentBomberX = 1, currentBomberY = 1;
     int frame = 0, currentBomb = 0;
     boolean mute = true;
-    public List<Enemy> balloons = new ArrayList<>();
-    public List<Enemy> minvos = new ArrayList<>();
-    public List<Enemy> oneals = new ArrayList<>();
-    public List<Enemy> kondorias = new ArrayList<>();
-    public List<Enemy> dolls = new ArrayList<>();
     Bomber bomberman;
-    public List<Entity> stillObjects = new ArrayList<>();
     List<Entity> bombs = new ArrayList<>();
     Map board = new Map("src/main/resources/levels/Level1.txt");
     char[][] map = board.getMap();
     Stage parentStage = new Stage();
     Stage stage = new Stage();
+    private GraphicsContext gc;
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -56,7 +58,8 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Sound.backgroundMusic.play();
+        Sound.backgroundMusic.loopPlay();
+
         FXMLLoader loader = new FXMLLoader(BombermanGame.class.getResource("/uet/oop/bomberman/bomberman.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
@@ -93,10 +96,16 @@ public class BombermanGame extends Application {
     @FXML
     public void loadSavedGame() {
         loadSavedGame = true;
-        if(played) game();
+        if (played) game();
     }
+
+    public void saveGame() {
+        board.saveGame(map);
+        board.saveMovingEntity(balloons, oneals, minvos, kondorias, dolls, bomberman);
+    }
+
     public void gameOver() {
-        if(gameOver) {
+        if (gameOver) {
             stage.close();
             FXMLLoader loader = new FXMLLoader(BombermanGame.class.getResource("/uet/oop/bomberman/gameOver.fxml"));
             try {
@@ -121,14 +130,14 @@ public class BombermanGame extends Application {
         stage.show();
         stage.setTitle("Bomberman-ver1.0");
 
-        if(loadSavedGame) {
+        if (loadSavedGame) {
             map = board.loadSavedMap();
             loadSavedEnemy();
-            bomberman = new Bomber(2,1,Sprite.player_right_1.getFxImage());
+            bomberman = new Bomber(2, 1, Sprite.player_right_1.getFxImage());
             stillObjects = board.createMap(map);
             bomberman = board.loadBombermanFromTxt();
             loadSavedGame = false;
-        }else {
+        } else {
             played = true;
             init();
         }
@@ -172,7 +181,7 @@ public class BombermanGame extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                if(stage.isShowing()) {
+                if (stage.isShowing()) {
                 /*if (sceneController.status.equals("close")) {
                     stage.close();
                 } else if (sceneController.status.equals("new-game")) {
@@ -181,11 +190,12 @@ public class BombermanGame extends Application {
                 }*/
                     {
                         if (permaLevel) getNextLevel();
-
                         update();
                         render();
-                        board.saveGame(map);
-                        board.saveMovingEntity(balloons, oneals, minvos, kondorias, dolls, bomberman);
+                        if (sceneController.status.equals("save-game")) {
+                            saveGame();
+                            sceneController.status = "";
+                        }
                     }
                 }
                 //if(!test) test();
@@ -197,13 +207,13 @@ public class BombermanGame extends Application {
 
 
     public void update() {
-        if(!bomberman.isAlive && !gameOver) {
+        if (!bomberman.isAlive && !gameOver) {
             gameOver = true;
             gameOver();
         }
         frame++;
         bomberman.checkInItem(stillObjects);
-        if(bomberman.isPortal() && nextLevel) {
+        if (bomberman.isPortal() && nextLevel) {
             nextLevel();
             nextLevel = false;
             permaLevel = false;
@@ -218,7 +228,7 @@ public class BombermanGame extends Application {
                     bomberman.setAlive(false);
                 }
             }
-            if(balloons.get(i).delete) {
+            if (balloons.get(i).delete) {
                 balloons.remove(balloons.get(i));
                 i--;
             }
@@ -239,20 +249,20 @@ public class BombermanGame extends Application {
                 }
                 ((Oneal) oneals.get(i)).setLocChange(false);
             }
-            if(oneals.get(i).delete) {
+            if (oneals.get(i).delete) {
                 oneals.remove(oneals.get(i));
                 i--;
             }
         }
         //minvo
-        for (int i = 0;i < minvos.size(); i++) {
+        for (int i = 0; i < minvos.size(); i++) {
             if (minvos.get(i).getAlive()) {
                 minvos.get(i).complexEnemyMovement(stillObjects, map, bomberman.xPos, bomberman.yPos);
                 if (minvos.get(i).touchBomber(bomberman.xPos, bomberman.yPos)) {
                     bomberman.setAlive(false);
                 }
             }
-            if(minvos.get(i).delete) {
+            if (minvos.get(i).delete) {
                 minvos.remove(minvos.get(i));
                 i--;
             }
@@ -446,22 +456,23 @@ public class BombermanGame extends Application {
 
     public void getNextLevel() {
         for (Enemy balloon : balloons) {
-            if(balloon.getAlive()) {
+            if (balloon.getAlive()) {
                 return;
             }
         }
         for (Enemy oneal : oneals) {
-            if(oneal.getAlive()) {
+            if (oneal.getAlive()) {
                 return;
             }
         }
         nextLevel = true;
     }
+
     public void nextLevel() {
         board = new Map("src/main/resources/levels/Level2.txt");
         board.setLevel(2);
         map = board.getMap();
-        stillObjects =  board.createMap(map);
+        stillObjects = board.createMap(map);
         //bomberman = board.getBomberman();
         balloons.removeAll(balloons);
         oneals.removeAll(oneals);
@@ -470,6 +481,7 @@ public class BombermanGame extends Application {
         minvos = board.getMinvo();
         bomberman = board.getBomberman();
     }
+
     public void test() {
         for (Enemy enemy : balloons) {
             enemy.setAlive(false);
@@ -481,15 +493,16 @@ public class BombermanGame extends Application {
         }
         test = true;
     }
+
     public void loadSavedEnemy() {
-        Enemy balloon1 = new Balloon(1,1,Sprite.player_up_2.getFxImage());
-        Enemy doll1 = new Doll(1,1,Sprite.oneal_right1.getFxImage());
-        Enemy kondoria1 = new Kondoria(1,1,Sprite.player_up_2.getFxImage());
-        Enemy minvo1 = new Minvo(1,1,Sprite.player_left_2.getFxImage());
-        Enemy oneal1 = new Oneal(1,1,Sprite.oneal_dead.getFxImage());
-        balloons = board.loadEnemyFromTxt("src/main/resources/game_progress/balloon.txt",balloon1);
-        oneals = board.loadEnemyFromTxt("src/main/resources/game_progress/oneal.txt",oneal1);
-        if(nextLevel) {
+        Enemy balloon1 = new Balloon(1, 1, Sprite.player_up_2.getFxImage());
+        Enemy doll1 = new Doll(1, 1, Sprite.oneal_right1.getFxImage());
+        Enemy kondoria1 = new Kondoria(1, 1, Sprite.player_up_2.getFxImage());
+        Enemy minvo1 = new Minvo(1, 1, Sprite.player_left_2.getFxImage());
+        Enemy oneal1 = new Oneal(1, 1, Sprite.oneal_dead.getFxImage());
+        balloons = board.loadEnemyFromTxt("src/main/resources/game_progress/balloon.txt", balloon1);
+        oneals = board.loadEnemyFromTxt("src/main/resources/game_progress/oneal.txt", oneal1);
+        if (nextLevel) {
             dolls = board.loadEnemyFromTxt("src/main/resources/game_progress/balloon.txt", doll1);
             kondorias = board.loadEnemyFromTxt("src/main/resources/game_progress/kondoria.txt", kondoria1);
             minvos = board.loadEnemyFromTxt("src/main/resources/game_progress/minvo.txt", minvo1);

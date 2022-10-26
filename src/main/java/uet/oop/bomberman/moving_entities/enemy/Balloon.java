@@ -2,12 +2,11 @@ package uet.oop.bomberman.moving_entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.automove.SimpleMovement;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class Balloon extends Enemy {
 
@@ -37,10 +36,9 @@ public class Balloon extends Enemy {
             renderW(gc);
         } else if (pressS) {
             renderS(gc);
-        } else if(!getAlive()) {
+        } else if (!getAlive()) {
             renderDie(gc);
-        }
-        else  {
+        } else {
             gc.drawImage(Sprite.balloom_right1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
     }
@@ -53,15 +51,15 @@ public class Balloon extends Enemy {
                 xPos -= 1;
                 left();
             }
-             if (direction == 0 && canMove(stillObjects, xPos + 1, yPos)) {
+            if (direction == 0 && canMove(stillObjects, xPos + 1, yPos)) {
                 xPos += 1;
                 right();
             }
-             if (direction == 2 && canMove(stillObjects, xPos, yPos - 1)) {
+            if (direction == 2 && canMove(stillObjects, xPos, yPos - 1)) {
                 yPos -= 1;
                 up();
             }
-             if (direction == 3 && canMove(stillObjects, xPos, yPos + 1)) {
+            if (direction == 3 && canMove(stillObjects, xPos, yPos + 1)) {
                 yPos += 1;
                 down();
             }
@@ -105,11 +103,11 @@ public class Balloon extends Enemy {
         frame++;
 
         if (frame < 11) {
-            gc.drawImage(Sprite.balloom_right1.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE - 32 + frame);
+            gc.drawImage(Sprite.balloom_right1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE - 32 + frame);
         } else if (frame < 21) {
-            gc.drawImage(Sprite.balloom_right2.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE - 32 + frame);
+            gc.drawImage(Sprite.balloom_right2.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE - 32 + frame);
         } else if (frame < 31) {
-            gc.drawImage(Sprite.balloom_right1.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE- 32 + frame);
+            gc.drawImage(Sprite.balloom_right1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE - 32 + frame);
         }
         if (frame == 30) {
             frame = 0;
@@ -121,11 +119,11 @@ public class Balloon extends Enemy {
     public void renderW(GraphicsContext gc) {
         frame++;
         if (frame < 11) {
-            gc.drawImage(Sprite.balloom_left2.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE+ 32 - frame);
+            gc.drawImage(Sprite.balloom_left2.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE + 32 - frame);
         } else if (frame < 21) {
-            gc.drawImage(Sprite.balloom_left1.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE+ 32 - frame);
+            gc.drawImage(Sprite.balloom_left1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE + 32 - frame);
         } else if (frame < 31) {
-            gc.drawImage(Sprite.balloom_left2.getFxImage(), xPos * Sprite.SCALED_SIZE , yPos * Sprite.SCALED_SIZE+ 32 - frame);
+            gc.drawImage(Sprite.balloom_left2.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE + 32 - frame);
         }
         if (frame == 30) {
             frame = 0;
@@ -136,10 +134,10 @@ public class Balloon extends Enemy {
 
     public void renderDie(GraphicsContext gc) {
         frame++;
-        if(frame < 21) {
-            gc.drawImage(Sprite.balloom_dead.getFxImage(), xPos* Sprite.SCALED_SIZE, yPos* Sprite.SCALED_SIZE);
+        if (frame < 21) {
+            gc.drawImage(Sprite.balloom_dead.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
-        if(frame == 20) {
+        if (frame == 20) {
             frame = 0;
             delete = true;
         }

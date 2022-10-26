@@ -1,6 +1,6 @@
 package uet.oop.bomberman.automove;
 
-public class SimpleMovement extends AutomaticMovement{
+public class SimpleMovement extends AutomaticMovement {
     @Override
     public int calculateMovement() {
         return random.nextInt(4);

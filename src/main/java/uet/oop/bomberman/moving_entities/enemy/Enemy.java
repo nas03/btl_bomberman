@@ -11,9 +11,14 @@ public abstract class Enemy extends MovingEntity {
     protected int frame = 0;
     private boolean isAlive = true;
 
+    public Enemy(int x, int y, Image img) {
+        super(x, y, img);
+    }
+
     public boolean touchBomber(int bomberX, int bomberY) {
         return xPos == bomberX && bomberY == yPos;
     }
+
     public boolean getAlive() {
         return isAlive;
     }
@@ -22,16 +27,16 @@ public abstract class Enemy extends MovingEntity {
         isAlive = alive;
     }
 
-    public Enemy(int x, int y, Image img) {
-        super(x,y,img);
-    }
     @Override
     public abstract void update();
+
     @Override
     public abstract void render(GraphicsContext gc);
 
-    public abstract void enemyMovement(List <Entity> stillObjects, char[][] map);
-    public abstract void complexEnemyMovement(List<Entity> stillObjects, char[][] map, int bomberXPos,int bomberYPos);
+    public abstract void enemyMovement(List<Entity> stillObjects, char[][] map);
+
+    public abstract void complexEnemyMovement(List<Entity> stillObjects, char[][] map, int bomberXPos, int bomberYPos);
+
     public void resetFrame() {
         if (frame == 500) {
             frame = 0;

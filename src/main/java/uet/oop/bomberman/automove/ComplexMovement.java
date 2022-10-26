@@ -7,6 +7,10 @@ public class ComplexMovement extends AutomaticMovement {
     private boolean[][] wasHere = new boolean[13][31];
     private boolean[][] correctPath = new boolean[13][31];
 
+    public ComplexMovement() {
+
+    }
+
     public boolean isSolved() {
         return solved;
     }
@@ -18,9 +22,6 @@ public class ComplexMovement extends AutomaticMovement {
     public boolean[][] getCorrectPath() {
         return correctPath;
     }
-    public ComplexMovement() {
-
-    }
 
     @Override
     public int calculateMovement() {
@@ -31,10 +32,10 @@ public class ComplexMovement extends AutomaticMovement {
     public void voidTypeComplexMovement(char[][] map, int enemyPosX, int enemyPosY, int bomberPosX, int bomberPosY) {
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 31; j++) {
-                if(map[i][j] == '#' || map[i][j]  == '*') {
+                if (map[i][j] == '#' || map[i][j] == '*') {
                     maze[i][j] = true;
                 } else {
-                    maze[i][j]  = false;
+                    maze[i][j] = false;
                 }
             }
         }
@@ -46,9 +47,9 @@ public class ComplexMovement extends AutomaticMovement {
             }
         }
         boolean b = recursiveSolve(enemyPosX, enemyPosY, bomberPosX, bomberPosY);
-            if(b) {
-                solved = true;
-            }
+        if (b) {
+            solved = true;
+        }
     }
 
     @Override

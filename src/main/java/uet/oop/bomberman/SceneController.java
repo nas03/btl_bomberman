@@ -7,9 +7,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class SceneController{
+public class SceneController {
     public String status = "open";
     GraphicsContext gc;
+
     public VBox prepare() {
         Canvas canvas = new Canvas(992, 416);
         //create menu bar
@@ -60,7 +61,7 @@ public class SceneController{
         Button quit = new Button("Quit");
         quit.setLayoutX(100);
         quit.setLayoutY(150);
-        gameMenu.getChildren().addAll(playGame,howToPlay,quit);
+        gameMenu.getChildren().addAll(playGame, howToPlay, quit);
         return gameMenu;
     }
 

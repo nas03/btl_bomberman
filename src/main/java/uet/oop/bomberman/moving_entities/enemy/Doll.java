@@ -2,22 +2,22 @@ package uet.oop.bomberman.moving_entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.automove.NormalMovement;
 import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Wall;
-import uet.oop.bomberman.automove.NormalMovement;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
 import java.util.Random;
 
 public class Doll extends Enemy {
-    public Doll(int x, int y, Image img) {
-        super(x, y, img);
-    }
     protected boolean skillReady = false;
     int counter = 0;
     NormalMovement movement = new NormalMovement();
+    public Doll(int x, int y, Image img) {
+        super(x, y, img);
+    }
 
     public boolean isSkillReady() {
         return skillReady;
@@ -29,10 +29,10 @@ public class Doll extends Enemy {
 
     @Override
     public void update() {
-        if(frame == 0) {
+        if (frame == 0) {
             counter++;
         }
-        if(counter == 20) {
+        if (counter == 20) {
             skillReady = true;
             counter = 0;
         }
@@ -48,10 +48,9 @@ public class Doll extends Enemy {
             renderW(gc);
         } else if (pressS) {
             renderS(gc);
-        } else if(!getAlive()) {
+        } else if (!getAlive()) {
             renderDie(gc);
-        }
-        else {
+        } else {
             gc.drawImage(Sprite.doll_right1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
     }
@@ -84,16 +83,16 @@ public class Doll extends Enemy {
 
     }
 
-    public void teleport(List<Entity> stillObjects,int bomberX, int bomberY) {
+    public void teleport(List<Entity> stillObjects, int bomberX, int bomberY) {
         Random random = new Random();
         int randomX = bomberX - 1;
-        int randomY = bomberY ;
+        int randomY = bomberY;
         if (!(stillObjects.get(randomY * 31 + randomX) instanceof Brick || stillObjects.get(randomY * 31 + randomX) instanceof Wall)) {
             xPos = randomX;
             yPos = randomY;
-        }else {
+        } else {
             randomX = bomberX + 1;
-            randomY = bomberY ;
+            randomY = bomberY;
             if (!(stillObjects.get(randomY * 31 + randomX) instanceof Brick || stillObjects.get(randomY * 31 + randomX) instanceof Wall)) {
                 xPos = randomX;
                 yPos = randomY;
@@ -164,12 +163,13 @@ public class Doll extends Enemy {
             pressW = false;
         }
     }
+
     public void renderDie(GraphicsContext gc) {
         frame++;
-        if(frame < 21) {
-            gc.drawImage(Sprite.doll_dead.getFxImage(), xPos* Sprite.SCALED_SIZE, yPos* Sprite.SCALED_SIZE);
+        if (frame < 21) {
+            gc.drawImage(Sprite.doll_dead.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
-        if(frame == 20) {
+        if (frame == 20) {
             frame = 0;
             delete = true;
         }

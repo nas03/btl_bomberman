@@ -7,15 +7,21 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Wall;
 
 import java.util.List;
+
 public abstract class MovingEntity {
     public boolean isAlive = true;
     public boolean delete = false;
     public boolean pressW, pressA, pressS, pressD;
-    private int speed = 1;
     public int xPos;
     public int yPos;
-
     protected Image img;
+    private int speed = 1;
+
+    public MovingEntity(int x, int y, Image img) {
+        xPos = x;
+        yPos = y;
+        this.img = img;
+    }
 
     public int getSpeed() {
         return speed;
@@ -23,12 +29,6 @@ public abstract class MovingEntity {
 
     public void setSpeed(int speed) {
         this.speed = speed;
-    }
-
-    public MovingEntity(int x, int y, Image img) {
-        xPos = x;
-        yPos = y;
-        this.img = img;
     }
 
     public abstract void update();
