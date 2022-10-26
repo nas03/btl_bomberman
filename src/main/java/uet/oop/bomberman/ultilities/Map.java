@@ -1,6 +1,10 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.ultilities;
 
 
+import uet.oop.bomberman.entities.Brick;
+import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.Grass;
+import uet.oop.bomberman.entities.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.moving_entities.Bomber;
 import uet.oop.bomberman.moving_entities.enemy.*;
@@ -164,6 +168,8 @@ public class Map {
             Bomber bomberman = new Bomber(a, b, Sprite.player_right.getFxImage());
             String bombLimit = scan.nextLine();
             bomberman.bombLimit = Integer.parseInt(bombLimit);
+            String speed = scan.nextLine();
+            bomberman.setSpeed(Integer.parseInt(speed));
             String enhancedFlame = scan.nextLine();
             if (enhancedFlame.equals("true")) {
                 bomberman.setEnhancedFlame(true);
@@ -183,11 +189,14 @@ public class Map {
             out.write(bomberman.xPos + " " + bomberman.yPos + '\n');
             String bombLimit = String.valueOf(bomberman.bombLimit);
             out.write(bombLimit + '\n');
+            String speed = String.valueOf(bomberman.getSpeed());
+            out.write(speed + '\n');
             if (bomberman.getEnhancedFlame()) {
                 out.write("true\n");
             } else {
                 out.write("false\n");
             }
+
             out.close();
         } catch (Exception e) {
             System.out.println("Cant save enemy\n");

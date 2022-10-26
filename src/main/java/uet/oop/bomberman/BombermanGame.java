@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomb;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.Map;
+import uet.oop.bomberman.ultilities.Map;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.moving_entities.Bomber;
 import uet.oop.bomberman.moving_entities.enemy.*;
@@ -222,14 +222,14 @@ public class BombermanGame extends Application {
 
 
     public void update() {
-        if(winGame) {
 
-            winGame();
-            winGame = false;
-        }
         if (!bomberman.isAlive && !gameOver) {
             gameOver = true;
             gameOver();
+        }
+        if(winGame && !gameOver) {
+            winGame();
+            winGame = false;
         }
         frame++;
         bomberman.checkInItem(stillObjects);
@@ -372,7 +372,6 @@ public class BombermanGame extends Application {
     public void init() {
         map = board.getMap();
         stillObjects = board.createMap(map);
-
         bomberman = board.getBomberman();
         minvos = board.getMinvo();
         balloons = board.getBalloon();
