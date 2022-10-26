@@ -2,6 +2,7 @@ package uet.oop.bomberman.moving_entities.enemy;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.automove.SimpleMovement;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.automove.ComplexMovement;
 import uet.oop.bomberman.graphics.Sprite;
@@ -67,7 +68,24 @@ public class Oneal extends Enemy {
                     if (movement.isSolved()) {
                         moveMap = movement.getCorrectPath();
                         solved = true;
-
+                    }
+                    SimpleMovement simpleMovement = new SimpleMovement();
+                    int direction = simpleMovement.calculateMovement();
+                    if (direction == 1 && canMove(stillObjects, xPos - 1, yPos)) {
+                        xPos -= 1;
+                        left();
+                    }
+                    if (direction == 0 && canMove(stillObjects, xPos + 1, yPos)) {
+                        xPos += 1;
+                        right();
+                    }
+                    if (direction == 2 && canMove(stillObjects, xPos, yPos - 1)) {
+                        yPos -= 1;
+                        up();
+                    }
+                    if (direction == 3 && canMove(stillObjects, xPos, yPos + 1)) {
+                        yPos += 1;
+                        down();
                     }
                 } else {
                     moveMap[yPos][xPos] = false;
@@ -156,10 +174,10 @@ public class Oneal extends Enemy {
 
     public void renderDie(GraphicsContext gc) {
         frame++;
-        if(frame < 21) {
+        if(frame < 31) {
             gc.drawImage(Sprite.oneal_dead.getFxImage(), xPos* Sprite.SCALED_SIZE, yPos* Sprite.SCALED_SIZE);
         }
-        if(frame == 20) {
+        if(frame == 30) {
             frame = 0;
             delete = true;
         }

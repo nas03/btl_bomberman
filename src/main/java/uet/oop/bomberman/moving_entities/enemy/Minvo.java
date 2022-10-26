@@ -130,10 +130,10 @@ public class Minvo extends Enemy {
 
     public void renderDie(GraphicsContext gc) {
         frame++;
-        if(frame < 21) {
+        if(frame < 31) {
             gc.drawImage(Sprite.minvo_dead.getFxImage(), xPos* Sprite.SCALED_SIZE, yPos* Sprite.SCALED_SIZE);
         }
-        if(frame == 20) {
+        if(frame == 30) {
             frame = 0;
             delete = true;
         }
