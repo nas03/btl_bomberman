@@ -17,9 +17,9 @@ public class SceneController{
         Menu game = new Menu("Game");
         Menu help = new Menu("Help");
         MenuItem howToPlay = new MenuItem("How To Play?");
-        MenuItem newGame = new MenuItem("New Game");
+        MenuItem saveGame = new MenuItem("Save Game");
         MenuItem quit = new MenuItem("Quit");
-        game.getItems().addAll(newGame, quit);
+        game.getItems().addAll(saveGame, quit);
         help.getItems().add(howToPlay);
         menuBar.getMenus().addAll(game, help);
         howToPlay.setOnAction(event -> {
@@ -40,9 +40,9 @@ public class SceneController{
             System.out.println("quit");
             status = "close";
         });
-        newGame.setOnAction(event -> {
-            System.out.println("new game");
-            status = "new-game";
+        saveGame.setOnAction(event -> {
+            System.out.println("save game");
+            status = "save-game";
         });
         //tao container root
         gc = canvas.getGraphicsContext2D();

@@ -9,6 +9,7 @@ import uet.oop.bomberman.entities.Wall;
 import java.util.List;
 public abstract class MovingEntity {
     public boolean isAlive = true;
+    public boolean delete = false;
     public boolean pressW, pressA, pressS, pressD;
     private int speed = 1;
     public int xPos;

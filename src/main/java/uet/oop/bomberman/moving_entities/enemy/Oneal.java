@@ -37,7 +37,10 @@ public class Oneal extends Enemy {
             renderW(gc);
         } else if (pressS) {
             renderS(gc);
-        } else {
+        } else if (!getAlive()) {
+            renderDie(gc);
+        }
+        else {
             gc.drawImage(Sprite.oneal_right1.getFxImage(), xPos * Sprite.SCALED_SIZE, yPos * Sprite.SCALED_SIZE);
         }
 
@@ -149,5 +152,16 @@ public class Oneal extends Enemy {
             pressW = false;
         }
 
+    }
+
+    public void renderDie(GraphicsContext gc) {
+        frame++;
+        if(frame < 21) {
+            gc.drawImage(Sprite.oneal_dead.getFxImage(), xPos* Sprite.SCALED_SIZE, yPos* Sprite.SCALED_SIZE);
+        }
+        if(frame == 20) {
+            frame = 0;
+            delete = true;
+        }
     }
 }
