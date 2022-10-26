@@ -223,7 +223,9 @@ public class BombermanGame extends Application {
 
     public void update() {
         if(winGame) {
+
             winGame();
+            winGame = false;
         }
         if (!bomberman.isAlive && !gameOver) {
             gameOver = true;
@@ -372,12 +374,12 @@ public class BombermanGame extends Application {
         stillObjects = board.createMap(map);
 
         bomberman = board.getBomberman();
-        /*minvos = board.getMinvo();
+        minvos = board.getMinvo();
         balloons = board.getBalloon();
         dolls = board.getDoll();
         kondorias = board.getKondoria();
         oneals = board.getOneal();
-        bomberman = board.getBomberman();*/
+        bomberman = board.getBomberman();
         gameOver = false;
     }
 
@@ -497,9 +499,9 @@ public class BombermanGame extends Application {
         //bomberman = board.getBomberman();
         balloons.removeAll(balloons);
         oneals.removeAll(oneals);
-       /* kondorias = board.getKondoria();
+        kondorias = board.getKondoria();
         dolls = board.getDoll();
-        minvos = board.getMinvo();*/
+        minvos = board.getMinvo();
         bomberman.xPos = 1;
         bomberman.yPos = 1;
     }

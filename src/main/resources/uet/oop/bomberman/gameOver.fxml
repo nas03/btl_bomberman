@@ -26,13 +26,13 @@
         </Text>-->
         <Button layoutX="296.0" layoutY="352.0" mnemonicParsing="false" onAction="#game" text="Replay">
             <font>
-                <Font name="Trebuchet MS" size="29.0"/>
+                <Font name="Pixeboy" size="27.0"/>
             </font>
         </Button>
         <Button layoutX="495.0" layoutY="352.0" mnemonicParsing="false" onAction="#quit" prefHeight="55.0"
                 prefWidth="127.0" text="QUIT">
             <font>
-                <Font name="Trebuchet MS" size="29.0"/>
+                <Font name="Pixeboy" size="27.0"/>
             </font>
         </Button>
     </children>

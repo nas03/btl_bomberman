@@ -21,7 +21,7 @@
                 <Button layoutX="658.0" layoutY="97.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="214.0"
                         text="   New Game" onAction="#playGame">
                     <font>
-                        <Font size="29.0"/>
+                        <Font name = "Pixeboy" size="29.0"/>
                     </font>
                 </Button>
                 <Button layoutX="659.0" layoutY="184.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="214.0"
