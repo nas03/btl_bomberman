@@ -69,7 +69,7 @@ public class Oneal extends Enemy {
                         solved = true;
 
                     }
-                } else if(solved){
+                } else {
                     moveMap[yPos][xPos] = false;
                     moveMap[bomberYPos][bomberXPos] = true;
                     if (moveMap[yPos + 1][xPos]) {
@@ -85,8 +85,6 @@ public class Oneal extends Enemy {
                         xPos -= 1;
                         left();
                     }
-                } else {
-
                 }
             }
         }
@@ -158,10 +156,10 @@ public class Oneal extends Enemy {
 
     public void renderDie(GraphicsContext gc) {
         frame++;
-        if(frame < 31) {
+        if(frame < 21) {
             gc.drawImage(Sprite.oneal_dead.getFxImage(), xPos* Sprite.SCALED_SIZE, yPos* Sprite.SCALED_SIZE);
         }
-        if(frame == 30) {
+        if(frame == 20) {
             frame = 0;
             delete = true;
         }

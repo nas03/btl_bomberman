@@ -166,10 +166,10 @@ public class Doll extends Enemy {
     }
     public void renderDie(GraphicsContext gc) {
         frame++;
-        if(frame < 31) {
+        if(frame < 21) {
             gc.drawImage(Sprite.doll_dead.getFxImage(), xPos* Sprite.SCALED_SIZE, yPos* Sprite.SCALED_SIZE);
         }
-        if(frame == 30) {
+        if(frame == 20) {
             frame = 0;
             delete = true;
         }
