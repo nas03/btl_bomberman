@@ -1,5 +1,6 @@
 package uet.oop.bomberman;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -38,8 +39,7 @@ public class SceneController {
             newWindow.show();
         });
         quit.setOnAction(event -> {
-            System.out.println("quit");
-            status = "close";
+            Platform.exit();
         });
         saveGame.setOnAction(event -> {
             System.out.println("save game");
