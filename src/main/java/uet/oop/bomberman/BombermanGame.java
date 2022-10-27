@@ -58,7 +58,7 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Sound.backgroundMusic.loopPlay();
+        //Sound.backgroundMusic.loopPlay();
 
         FXMLLoader loader = new FXMLLoader(BombermanGame.class.getResource("/uet/oop/bomberman/bomberman.fxml"));
         Scene scene = new Scene(loader.load());
@@ -95,7 +95,7 @@ public class BombermanGame extends Application {
     @FXML
     public void loadSavedGame() {
         loadSavedGame = true;
-        if (played) game();
+         game();
     }
 
     @FXML

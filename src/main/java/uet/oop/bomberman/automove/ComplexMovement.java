@@ -74,7 +74,7 @@ public class ComplexMovement extends AutomaticMovement {
                 return true;
             }
         }
-        if (x != 12) { // Checks if not on right edge{
+        if (x != 12) {
             if (recursiveSolve(x + 1, y, bomberPosX, bomberPosY)) {
                 correctPath[x][y] = true;
                 return true;
