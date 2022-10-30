@@ -1,8 +1,0 @@
-@font-face {
-    font-family: 'J';
-    src: url('/JackPixel.ttf');
-}
-
-.label {
-    -fx-font-family: "Pixeboi";
-}
